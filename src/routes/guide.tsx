@@ -13,10 +13,10 @@ function GuidePage() {
     <>
       <PageHeader title="使用指南与免责声明" />
 
-      <Section title="版本与开源归属" className="md:grid-cols-1">
+      <Section title="版本与开源归属" className="@lg/section:grid-cols-1">
         <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
           <p>
-            本个人版由 H-Bole 基于 Anhao 中文版二次开发，由 GPT6.1 Sol 协助开发。图库素材原作者为ギア（@giaaibusi），素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
+            本个人版由 H-Bole 基于 Anhao 中文版二次开发，由 GPT6.1 Sol 协助开发。原有图库素材作者为ギア（@giaaibusi），新增二次元服装作者为たき AI（@taki_auto），素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
           </p>
           <p className="flex flex-wrap gap-x-4 gap-y-2">
             <a className="underline" href="https://github.com/H-Bole/ai-pose-gallery-zh">个人版源码</a>
@@ -27,7 +27,7 @@ function GuidePage() {
         </div>
       </Section>
 
-      <Section title="角色合成流程" className="md:grid-cols-3">
+      <Section title="角色合成流程" className="@lg/section:grid-cols-3">
         <div className="rounded-2xl bg-background p-4">
           <Badge>1. 人像</Badge>
           <h3 className="mt-2 text-sm font-semibold">人像颜值库 (1,499)</h3>
@@ -53,7 +53,7 @@ function GuidePage() {
         </div>
       </Section>
 
-      <Section title="免责声明与合规使用规范（必读）" className="md:grid-cols-1">
+      <Section title="免责声明与合规使用规范（必读）" className="@lg/section:grid-cols-1">
         <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
           <p>
             <strong className="text-foreground">1. 仅供学习与合法艺术创作（严禁违法）：</strong>
@@ -74,13 +74,13 @@ function GuidePage() {
         </div>
       </Section>
 
-      <Section title="访问统计与隐私" className="md:grid-cols-1">
+      <Section title="访问统计与隐私" className="@lg/section:grid-cols-1">
         <div className="rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
           Cloudflare Web Analytics 仅用于访问量与页面性能统计，支持 SPA 页面切换，未添加自定义事件。统计不会发送 API Key、提示词、上传参考图或生成内容；生图请求由使用者配置的服务处理，生成历史保存在本机浏览器中。
         </div>
       </Section>
 
-      <Section title="数据来源与版权说明" className="md:grid-cols-1">
+      <Section title="数据来源与版权说明" className="@lg/section:grid-cols-1">
         <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
           <p>
             <strong className="text-foreground">• 原作者版权归属：</strong>
