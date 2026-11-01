@@ -203,6 +203,8 @@ Node.js 24、pnpm 11.22.0 和 Wrangler 4.156.0 已在仓库中指定。`pnpm run
 
 使用现有 fork 时，不要另点会克隆新仓库的 Deploy to Cloudflare 模板按钮，以免建立第二份源码仓库。
 
+连接完成后，向 `main` 推送新提交即可触发首次自动构建；在 Cloudflare 的部署记录中确认该提交构建并发布成功，才能证明自动部署链路可用。仅看到仓库已连接或旧的 Wrangler 手动部署记录不足以确认。参见 [Workers Builds 官方说明](https://developers.cloudflare.com/workers/ci-cd/builds/)。
+
 网站提供静态图库与原有 `/api/proxy`；ComfyUI 连接在浏览器设置中填写自己的 HTTPS 网关。域名变化后浏览器配置与历史不会自动迁移，API Key 不应提交到仓库或构建变量。
 
 本项目自带 [wrangler.jsonc](wrangler.jsonc) 与 [worker.ts](worker.ts)，同时支持 **Cloudflare Workers（含静态 Assets + `/api/proxy` 同源代理）** 与 **Cloudflare Pages** 部署。仓库总体积约 `1.1 GB`、总文件数约 `8,735` 个、单文件全部 `< 2 MB`，完全符合 Cloudflare 免费版限制（单文件 ≤ 25 MiB，文件数 ≤ 20,000）。
