@@ -193,6 +193,14 @@ python3 scripts/verify.py
 
 ## 部署到 Cloudflare（Workers / Pages）
 
+### 本 fork 的部署
+
+本 fork 使用独立 Worker `h-bole-ai-pose-gallery`，生产来源为 `H-Bole/ai-pose-gallery-zh` 的 `main`。作者仓库的 PR 不承担个人部署配置。
+
+Cloudflare Workers Builds 连接该分支时，使用 Node.js 24、pnpm 11.22.0，构建命令为 `bash scripts/build.sh`，部署命令为 `pnpm dlx wrangler@4.156.0 deploy`。请完整检出仓库：单独运行 `pnpm build` 不会复制图库素材，稀疏检出也可能缺少图片。
+
+网站提供静态图库与原有 `/api/proxy`；ComfyUI 连接在浏览器设置中填写自己的 HTTPS 网关。域名变化后浏览器配置与历史不会自动迁移，API Key 不应提交到仓库或构建变量。
+
 本项目自带 [wrangler.jsonc](wrangler.jsonc) 与 [worker.ts](worker.ts)，同时支持 **Cloudflare Workers（含静态 Assets + `/api/proxy` 同源代理）** 与 **Cloudflare Pages** 部署。仓库总体积约 `1.1 GB`、总文件数约 `8,735` 个、单文件全部 `< 2 MB`，完全符合 Cloudflare 免费版限制（单文件 ≤ 25 MiB，文件数 ≤ 20,000）。
 
 ### 方式一：Cloudflare Workers 自动/命令行部署（推荐，内置 `/api/proxy` 解决千问/豆包跨域）
