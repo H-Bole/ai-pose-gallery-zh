@@ -85,15 +85,15 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton size="sm" asChild tooltip="访问 GitHub 仓库">
+            <SidebarMenuButton size="sm" asChild tooltip="访问 H-Bole 二次开发仓库">
               <a
-                href="https://github.com/anhao/ai-pose-gallery-zh"
+                href="https://github.com/H-Bole/ai-pose-gallery-zh"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-muted-foreground"
               >
                 <ExternalLinkIcon className="size-3.5" />
-                <span>GitHub · @anhao_ai</span>
+                <span>GitHub · H-Bole</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

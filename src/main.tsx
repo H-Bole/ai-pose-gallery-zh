@@ -7,6 +7,15 @@ import { StudioProvider } from '@/store/studioStore'
 import { routeTree } from './routeTree.gen'
 import './index.css'
 
+// 仅个人生产站启用统计，避免本地预览和其他 fork 污染数据。
+if (import.meta.env.PROD && window.location.hostname === 'h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev') {
+  const beacon = document.createElement('script')
+  beacon.type = 'module'
+  beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js'
+  beacon.dataset.cfBeacon = JSON.stringify({ token: '13fede9120554c5985b735736ab03002' })
+  document.head.append(beacon)
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

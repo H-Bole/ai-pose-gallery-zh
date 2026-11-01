@@ -1,26 +1,33 @@
-# AI 角色参考与合成工作台 · 中文版（3合1）
+# AI 角色参考与合成工作台 · H-Bole 个人版（3合1）
+
+本版本由 **H-Bole 基于 Anhao 中文版二次开发**，由 **GPT6.1 Sol 协助开发**。
+
+**个人在线版：** [图库首页](https://h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev/) · [角色合成台](https://h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev/studio)
+**个人仓库：** [H-Bole/ai-pose-gallery-zh](https://github.com/H-Bole/ai-pose-gallery-zh)
 
 > **姿势库（1,439 张） + 服装库（1,407 套） + 人像库（1,499 位） = 4,345 条全中文参考数据 / 8,690 张本地高清图**，集成 **5 大 AI 图像协议直连工作台** 与 **原生 ComfyUI 自定义节点插件（`custom_nodes`）**。
 
-![画廊总览预览](docs/preview.jpg)
+以下 `docs/` 截图为上游中文版界面示意，个人版的当前界面以在线站点为准。
 
-![AI 角色合成台预览](docs/studio.jpg)
+![上游中文版画廊界面示意](docs/preview.jpg)
+
+![上游中文版角色合成台界面示意](docs/studio.jpg)
 
 <details><summary>手机端预览</summary>
 
-![手机端预览](docs/mobile.jpg)
+![上游中文版手机端界面示意](docs/mobile.jpg)
 
 </details>
 
-**在线演示：** <https://ai-pose-gallery.anhao.app/>
+**上游中文版站点：** <https://ai-pose-gallery.anhao.app/>
 **原始站点：**
 - 姿势库：<https://ai-pose-gallery.pages.dev/>
 - 服装库：<https://ai-costume-gallery.pages.dev/>
 - 人像库：<https://ai-portrait-gallery.pages.dev/>
 
 **原作者：** ギア（@giaaibusi）
-**中文版维护：** Anhao · [X @anhao_ai](https://x.com/anhao_ai)
-**GitHub：** <https://github.com/anhao/ai-pose-gallery-zh>
+**上游中文版维护：** Anhao · [X @anhao_ai](https://x.com/anhao_ai)
+**上游仓库：** <https://github.com/anhao/ai-pose-gallery-zh>
 
 > ⚠️ **免责声明（必读）**：
 > 1. **学习与创作限定**：本项目及配套插件/工作流**仅供个人学习、人体动态研究、合法艺术创作与技术交流使用**，严禁用于任何违反法律法规、生成违法违规/淫秽色情内容或侵害他人合法权益（如未经授权的真人肖像换脸）的用途。
@@ -44,6 +51,10 @@
 ---
 
 ## 核心功能
+
+### 个人版的主要调整
+
+在上游三库与合成台基础上，个人版扩展了本地 ComfyUI API 工作流接入：导入后可识别与调整工作流高级参数、恢复原值，并导出当前参数副本；支持为工作流中的额外图片节点上传参考图，以及通过元数据声明角色设定集入口。具体能力与限制见 [ComfyUI 工作流高级参数](docs/comfyui-workflow-parameters.md)。
 
 ### 1. 三大参考图库（姿势 / 服装 / 人像）
 - **姿势参考库（`/poses`）**：4 大体系（全身单人・标准系 / 全身单人・性感系 / 上半身单人 / 双人缠绵）、26 个动作分类、288 组姿势、5 种视角（正面 / 斜前 / 侧面 / 背面 / 俯视），支持**按姿势分组 / 逐张浏览**双模式及卡片内多角度切换。
@@ -95,7 +106,7 @@
 
 ```bash
 cd /path/to/ComfyUI/custom_nodes
-git clone --depth 1 https://github.com/anhao/ai-pose-gallery-zh.git
+git clone --depth 1 https://github.com/H-Bole/ai-pose-gallery-zh.git
 ```
 
 重启 ComfyUI 后：
@@ -162,7 +173,7 @@ git clone --depth 1 https://github.com/anhao/ai-pose-gallery-zh.git
 
 ## 本地开发与构建
 
-需要 **Node.js 20+** 与 **pnpm**：
+需要 **Node.js 24** 与 **pnpm 11.22.0**：
 
 ```bash
 # 1. 安装依赖
@@ -199,7 +210,7 @@ python3 scripts/verify.py
 
 Node.js 24、pnpm 11.22.0 和 Wrangler 4.156.0 已在仓库中指定。`pnpm run build` 包含前端与完整图库素材，`pnpm run deploy` 可以完成构建和部署。请完整检出仓库，稀疏检出可能缺少图片。
 
-连接现有 Worker 的 Git 自动部署时，选择 `H-Bole/ai-pose-gallery-zh`、分支 `main`。可以沿用自动识别的构建命令和默认 `npx wrangler deploy`；如果需要手动填写，只需将部署命令设为 `pnpm run deploy`，构建命令留空，无需分别填写素材复制脚本或版本变量。GitHub 账户授权仍需由账户本人在 Cloudflare 官方控制台完成。
+连接现有 Worker 的 Git 自动部署时，选择 `H-Bole/ai-pose-gallery-zh`、分支 `main`，构建命令留空，部署命令填写 `pnpm run deploy`。该命令包含完整构建，无需分别填写素材复制脚本或版本变量。GitHub 账户授权仍需由账户本人在 Cloudflare 官方控制台完成。
 
 使用现有 fork 时，不要另点会克隆新仓库的 Deploy to Cloudflare 模板按钮，以免建立第二份源码仓库。
 
@@ -212,19 +223,13 @@ Node.js 24、pnpm 11.22.0 和 Wrangler 4.156.0 已在仓库中指定。`pnpm run
 ### 方式一：Cloudflare Workers 自动/命令行部署（推荐，内置 `/api/proxy` 解决千问/豆包跨域）
 
 ```bash
-# 1. 构建前端与静态资源目录 dist/
-bash scripts/build.sh
-
-# 2. 本地或预览环境验证
-npx wrangler versions upload
-
-# 3. 正式部署到 Cloudflare Workers
-npx wrangler deploy
+# 构建前端、复制完整图库素材并正式部署到 Cloudflare Workers
+pnpm run deploy
 ```
 
 若使用 Cloudflare Dashboard 连接 GitHub 自动构建 Workers：
-- **Build command**：`bash scripts/build.sh`
-- **Deploy command**：`npx wrangler deploy`
+- **Build command**：留空
+- **Deploy command**：`pnpm run deploy`
 
 ### 方式二：Cloudflare Pages 部署
 
@@ -235,8 +240,16 @@ npx wrangler deploy
    | 字段 | 值 |
    | --- | --- |
    | Framework preset | `None`（或 `Vite`） |
-   | Build command | `bash scripts/build.sh` |
+   | Build command | `pnpm run build` |
    | Build output directory | `dist` |
+
+---
+
+## 访问统计与隐私
+
+个人在线版使用 Cloudflare Web Analytics 查看访问量与页面性能，支持 SPA 页面切换；未添加自定义事件，不向统计服务发送 API Key、提示词、上传参考图或生成内容。生图请求仍由使用者配置的服务处理，本地生成历史保存在浏览器中。
+
+维护者可登录 [Cloudflare Web Analytics 控制台](https://dash.cloudflare.com/708e9e2d5397e0c2642bedf36b1aebf4/web-analytics)，选择个人站点查看统计；该入口需要账户权限，不是公开统计报表。若控制台入口调整，从该账户首页进入 **Analytics & logs → Web Analytics**。
 
 ---
 
@@ -256,7 +269,7 @@ npx wrangler deploy
 | `portrait-reference` | 1,499 | 人像：正脸参考・造型氛围，按发长 / 51 种发型检索 |
 
 ```bash
-git clone --depth 1 https://github.com/anhao/ai-pose-gallery-zh.git ~/ai-pose-gallery-zh
+git clone --depth 1 https://github.com/H-Bole/ai-pose-gallery-zh.git ~/ai-pose-gallery-zh
 mkdir -p ~/.claude/skills
 for d in ~/ai-pose-gallery-zh/skills/*-reference*; do ln -s "$d" ~/.claude/skills/; done
 ```

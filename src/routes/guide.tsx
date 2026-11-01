@@ -13,6 +13,20 @@ function GuidePage() {
     <>
       <PageHeader title="使用指南与免责声明" />
 
+      <Section title="版本与开源归属" className="md:grid-cols-1">
+        <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
+          <p>
+            本个人版由 H-Bole 基于 Anhao 中文版二次开发，由 GPT6.1 Sol 协助开发。图库素材原作者为ギア（@giaaibusi），素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
+          </p>
+          <p className="flex flex-wrap gap-x-4 gap-y-2">
+            <a className="underline" href="https://github.com/H-Bole/ai-pose-gallery-zh">个人版源码</a>
+            <a className="underline" href="https://github.com/anhao/ai-pose-gallery-zh">Anhao 中文版源码</a>
+            <a className="underline" href="https://ai-pose-gallery.anhao.app/">上游中文版站点</a>
+            <a className="underline" href="https://github.com/H-Bole/ai-pose-gallery-zh/blob/main/LICENSE">MIT 许可证</a>
+          </p>
+        </div>
+      </Section>
+
       <Section title="角色合成流程" className="md:grid-cols-3">
         <div className="rounded-2xl bg-background p-4">
           <Badge>1. 人像</Badge>
@@ -57,6 +71,12 @@ function GuidePage() {
             本工作台为纯前端本地应用，所有 AI 生图请求均由使用者自行配置的云端 API Key 或使用者本机 ComfyUI 环境直接执行，平台不收集、不存储任何用户上传的图片或生成结果。
             <strong className="text-foreground">因使用者违规使用或不当传播所产生的一切法律责任，均由使用者本人独立承担，与本项目及维护者无关。</strong>
           </p>
+        </div>
+      </Section>
+
+      <Section title="访问统计与隐私" className="md:grid-cols-1">
+        <div className="rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
+          Cloudflare Web Analytics 仅用于访问量与页面性能统计，支持 SPA 页面切换，未添加自定义事件。统计不会发送 API Key、提示词、上传参考图或生成内容；生图请求由使用者配置的服务处理，生成历史保存在本机浏览器中。
         </div>
       </Section>
 

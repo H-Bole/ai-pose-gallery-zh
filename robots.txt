@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ai-pose-gallery.anhao.app/sitemap.xml
+Sitemap: https://h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev/sitemap.xml
