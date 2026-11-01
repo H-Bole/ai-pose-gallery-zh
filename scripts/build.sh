@@ -18,8 +18,6 @@ else
   npm run build
 fi
 
-cp -R _headers robots.txt sitemap.xml og-cover.jpg data thumbs img dist/
-
 echo "dist ready:"
 du -sh dist
 find dist -type f | wc -l

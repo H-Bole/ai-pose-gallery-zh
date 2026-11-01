@@ -197,7 +197,11 @@ python3 scripts/verify.py
 
 本 fork 使用独立 Worker `h-bole-ai-pose-gallery`，生产来源为 `H-Bole/ai-pose-gallery-zh` 的 `main`。作者仓库的 PR 不承担个人部署配置。
 
-Cloudflare Workers Builds 连接该分支时，使用 Node.js 24、pnpm 11.22.0，构建命令为 `bash scripts/build.sh`，部署命令为 `pnpm dlx wrangler@4.156.0 deploy`。请完整检出仓库：单独运行 `pnpm build` 不会复制图库素材，稀疏检出也可能缺少图片。
+Node.js 24、pnpm 11.22.0 和 Wrangler 4.156.0 已在仓库中指定。`pnpm run build` 包含前端与完整图库素材，`pnpm run deploy` 可以完成构建和部署。请完整检出仓库，稀疏检出可能缺少图片。
+
+连接现有 Worker 的 Git 自动部署时，选择 `H-Bole/ai-pose-gallery-zh`、分支 `main`。可以沿用自动识别的构建命令和默认 `npx wrangler deploy`；如果需要手动填写，只需将部署命令设为 `pnpm run deploy`，构建命令留空，无需分别填写素材复制脚本或版本变量。GitHub 账户授权仍需由账户本人在 Cloudflare 官方控制台完成。
+
+使用现有 fork 时，不要另点会克隆新仓库的 Deploy to Cloudflare 模板按钮，以免建立第二份源码仓库。
 
 网站提供静态图库与原有 `/api/proxy`；ComfyUI 连接在浏览器设置中填写自己的 HTTPS 网关。域名变化后浏览器配置与历史不会自动迁移，API Key 不应提交到仓库或构建变量。
 
