@@ -15,6 +15,7 @@ import { idbRead, idbWrite } from '@/lib/idbStorage'
 import { parseParameterWorkflow, workflowIdentity } from '@/lib/comfyWorkflowParameters'
 import { useSavedCreations } from './useSavedCreations'
 import { useCreativeLibrary } from './useCreativeLibrary'
+import { migrateDirectorPreviewWorkflow } from '@/lib/directorPreviewMigration'
 import { durableImage, snapshotGeneration } from '@/lib/generationSnapshot'
 import { recipeBackup } from '@/lib/recipeImages'
 import {
@@ -491,6 +492,17 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!idbHydrated) return
     const cp = activeComfyParams
+    const migratedJson = migrateDirectorPreviewWorkflow(cp.workflowJson)
+    if (migratedJson !== cp.workflowJson) {
+      const before = workflowIdentity(cp.workflowJson)
+      const after = workflowIdentity(migratedJson)
+      // 从浏览器旧工作流恢复时同步更新映射标识。
+      // oxlint-disable-next-line react/set-state-in-effect
+      setApiConfig((current) => current.comfyuiParams.workflowJson !== cp.workflowJson ? current : ({...current, comfyuiParams: {...cp, workflowJson: migratedJson, parameterOverrides: cp.parameterOverrides?.workflowId === before ? {...cp.parameterOverrides, workflowId: after} : cp.parameterOverrides}}))
+      // oxlint-disable-next-line react/set-state-in-effect
+      setRecipe((current) => current.workflowImagesIdentity === before ? {...current, workflowImagesIdentity: after} : current)
+      return
+    }
     const identity = workflowIdentity(cp.workflowJson)
     const workflow = parseParameterWorkflow(cp.workflowJson)
     const mapped = [cp.portraitNodeId, cp.costumeNodeId, cp.poseNodeId, cp.stitchedNodeId]
