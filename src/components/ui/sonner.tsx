@@ -5,23 +5,38 @@ import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon
 function Notice({ notice, paused, front, expanded }: { notice: ToastT; paused: boolean; front: boolean; expanded: boolean }) {
   const duration = Number.isFinite(notice.duration) ? Math.max(0, notice.duration!) : 4000
   const remaining = useRef(duration)
+  const closeTimer = useRef<number | undefined>(undefined)
+  const [closing, setClosing] = useState(false)
+  const dismiss = (automatic: boolean) => {
+    if (closeTimer.current !== undefined) return
+    setClosing(true)
+    const delay = document.documentElement.dataset.galleryMotion === 'off' || matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 160
+    closeTimer.current = window.setTimeout(() => {
+      if (automatic) notice.onAutoClose?.(notice)
+      else notice.onDismiss?.(notice)
+      toast.dismiss(notice.id)
+    }, delay)
+  }
+  const dismissRef = useRef(dismiss)
+  dismissRef.current = dismiss
+  useEffect(() => () => clearTimeout(closeTimer.current), [])
   useEffect(() => { remaining.current = duration }, [duration, notice.title, notice.type])
   useEffect(() => {
     if (paused) return
     const started = performance.now()
-    const timer = window.setTimeout(() => { notice.onAutoClose?.(notice); toast.dismiss(notice.id) }, remaining.current)
+    const timer = window.setTimeout(() => dismissRef.current(true), remaining.current)
     return () => { clearTimeout(timer); remaining.current = Math.max(0, remaining.current - (performance.now() - started)) }
   }, [paused, duration, notice])
   const action = notice.action && typeof notice.action === 'object' && 'label' in notice.action ? notice.action as Action : null
   const Icon = ({success: CircleCheckIcon, error: OctagonXIcon, warning: TriangleAlertIcon, loading: Loader2Icon} as const)[notice.type as 'success' | 'error' | 'warning' | 'loading'] || InfoIcon
-  return <div className="app-notice" data-kind={notice.type || 'normal'} role={notice.type === 'error' ? 'alert' : 'status'} aria-hidden={!front && !expanded} inert={!front && !expanded}>
+  return <div className="app-notice" data-closing={closing} data-kind={notice.type || 'normal'} role={notice.type === 'error' ? 'alert' : 'status'} aria-hidden={!front && !expanded} inert={!front && !expanded}>
     <span className="app-notice-icon" aria-hidden="true">{notice.icon || <Icon className={notice.type === 'loading' ? 'size-4 animate-spin' : 'size-4'} />}</span>
     <div className="app-notice-content">
       <div>{typeof notice.title === 'function' ? notice.title() : notice.title}</div>
       {notice.description && <div className="app-notice-description">{typeof notice.description === 'function' ? notice.description() : notice.description}</div>}
       {notice.action && <div>{action ? <button onClick={(e) => { action.onClick(e); toast.dismiss(notice.id) }}>{action.label}</button> : notice.action as React.ReactNode}</div>}
     </div>
-    <button type="button" className="app-notice-close" aria-label="关闭此通知" tabIndex={front || expanded ? 0 : -1} onClick={() => { notice.onDismiss?.(notice); toast.dismiss(notice.id) }}><XIcon className="size-3.5" /></button>
+    <button type="button" className="app-notice-close" aria-label="关闭此通知" tabIndex={front || expanded ? 0 : -1} disabled={closing} onClick={() => dismiss(false)}><XIcon className="size-3.5" /></button>
   </div>
 }
 

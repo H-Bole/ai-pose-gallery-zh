@@ -19,3 +19,8 @@
 .dark .app-notice[data-kind=warning] {background:#30240d;border-color:#614d23;color:#f0ce7a;}
 @keyframes notice-enter {from {opacity:0;translate:0 -8px;} to {opacity:1;translate:0 0;}}
 @media(prefers-reduced-motion:reduce) {.app-notice,.app-notice-layer {animation:none;transition:none;}}
+
+.app-notice[data-closing=true] {animation:notice-exit 160ms ease both;pointer-events:none;}
+@keyframes notice-exit {to {opacity:0;translate:0 -6px;}}
+html[data-gallery-motion=off] .app-notice,html[data-gallery-motion=off] .app-notice-layer {animation:none;transition:none;}
+@media(prefers-reduced-motion:reduce) {.app-notice[data-closing=true] {animation:none;}}
