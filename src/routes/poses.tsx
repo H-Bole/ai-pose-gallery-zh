@@ -1,3 +1,4 @@
+import { FavoriteButton } from '@/components/common/FavoriteButton'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import {
@@ -36,12 +37,13 @@ export const Route = createFileRoute('/poses')({
 
 function PosesPage() {
   const { data } = useSuspenseQuery(posesQuery)
-  const { recipe, togglePose, safeMode, requestUnlockNsfw, poseDepthMode, setPoseDepthMode } = useStudio()
+  const { recipe, togglePose, safeMode, requestUnlockNsfw, poseDepthMode, setPoseDepthMode, isFavorite } = useStudio()
 
   const [line, setLine] = useState('')
   const [category, setCategory] = useState('all')
   const [angle, setAngle] = useState('')
   const [viewMode, setViewMode] = useState<'group' | 'single'>('group')
+  const [onlyFavorites, setOnlyFavorites] = useState(false)
   const [query, setQuery] = useState('')
   const [shown, setShown] = useState(60)
   const [hoverAngles, setHoverAngles] = useState<Record<string, string>>({})
@@ -72,27 +74,31 @@ function PosesPage() {
 
   const filteredGroups = useMemo(() => {
     return baseGroups.filter((g) => {
+      if (onlyFavorites && !g.items.some((it) => isFavorite('pose', it))) return false
       if (activeLine && g.system !== activeLine) return false
       if (category !== 'all' && g.category !== category) return false
       return g.items.some((it) => {
+        if (onlyFavorites && !isFavorite('pose', it)) return false
         if (angle && it.角度 !== angle) return false
         if (q && !`${it.姿势名称} ${it.id} ${it.分类} ${it.姿势编号} ${it.体系}`.toLowerCase().includes(q)) return false
         return true
       })
     })
-  }, [baseGroups, activeLine, category, angle, q])
+  }, [baseGroups, activeLine, category, angle, q, onlyFavorites, isFavorite])
 
   const filteredSingles = useMemo(() => {
     return baseItems.filter((it) => {
+      if (onlyFavorites && !isFavorite('pose', it)) return false
       if (activeLine && it.体系 !== activeLine) return false
       if (category !== 'all' && it.分类 !== category) return false
       if (angle && it.角度 !== angle) return false
       if (q && !`${it.姿势名称} ${it.id} ${it.分类} ${it.姿势编号} ${it.体系}`.toLowerCase().includes(q)) return false
       return true
     })
-  }, [baseItems, activeLine, category, angle, q])
+  }, [baseItems, activeLine, category, angle, q, onlyFavorites, isFavorite])
 
   const resetFilters = () => {
+    setOnlyFavorites(false)
     setLine('')
     setCategory('all')
     setAngle('')
@@ -127,6 +133,7 @@ function PosesPage() {
   }, [viewer, filteredGroups])
 
   const getActiveGroupItem = (group: PoseGroup): PoseItem => {
+    if (onlyFavorites) return group.order.find((it) => isFavorite('pose', it) && (!angle || it.角度 === angle)) || group.order[0]
     const overrideAngle = hoverAngles[group.key]
     if (overrideAngle && group.angles[overrideAngle]) return group.angles[overrideAngle]
     if (angle && group.angles[angle]) return group.angles[angle]
@@ -249,6 +256,7 @@ function PosesPage() {
         )}
       </div>
 
+      <Button variant={onlyFavorites ? 'default' : 'outline'} aria-pressed={onlyFavorites} onClick={() => { setOnlyFavorites(!onlyFavorites); setShown(60) }}>只看收藏</Button>
       {/* 搜索与筛选面板 */}
       <div className="grid gap-3 rounded-[22px] bg-muted p-4 @xl/main:grid-cols-2 @4xl/main:grid-cols-[minmax(0,1fr)_200px_minmax(0,auto)_auto]">
         <div className="relative">
@@ -326,6 +334,7 @@ function PosesPage() {
                   onClick={() => setViewer({ groupIndex: gIdx, item })}
                   className="relative aspect-3/4 cursor-zoom-in overflow-hidden rounded-2xl bg-background"
                 >
+                  <div className="absolute top-2 left-2 z-10"><FavoriteButton category="pose" item={item} /></div>
                   <img
                     src={`/${poseThumbPath(item, poseDepthMode)}`}
                     alt={`${group.name} · ${item.角度}`}
@@ -410,6 +419,7 @@ function PosesPage() {
                   onClick={() => setViewer({ groupIndex: Math.max(0, gIdx), item })}
                   className="relative aspect-3/4 cursor-zoom-in overflow-hidden rounded-2xl bg-background"
                 >
+                  <div className="absolute top-2 left-2 z-10"><FavoriteButton category="pose" item={item} /></div>
                   <img
                     src={`/${poseThumbPath(item, poseDepthMode)}`}
                     alt={item.姿势名称}
@@ -468,6 +478,7 @@ function PosesPage() {
             return (
               <div className="grid md:grid-cols-[1fr_300px]">
                 <div className="relative flex max-h-[78dvh] min-h-[min(360px,65dvh)] items-center justify-center bg-muted/60 p-4">
+                  <div className="absolute top-2 left-2 z-10"><FavoriteButton category="pose" item={it} /></div>
                   <img src={`/${activeImgPath}`} alt={it.姿势名称} className="max-h-[72dvh] w-auto rounded-lg object-contain" />
                   {grp && grp.order.length > 1 && (
                     <>

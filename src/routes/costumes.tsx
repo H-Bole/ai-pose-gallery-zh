@@ -1,3 +1,4 @@
+import { FavoriteButton } from '@/components/common/FavoriteButton'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import {
@@ -36,11 +37,12 @@ export const Route = createFileRoute('/costumes')({
 
 function CostumesPage() {
   const { data: costumes } = useSuspenseQuery(costumesQuery)
-  const { recipe, toggleCostume, safeMode, requestUnlockNsfw } = useStudio()
+  const { recipe, toggleCostume, safeMode, requestUnlockNsfw, isFavorite } = useStudio()
 
   const [category, setCategory] = useState('')
   const [kind, setKind] = useState('全部')
   const [tag, setTag] = useState('all')
+  const [onlyFavorites, setOnlyFavorites] = useState(false)
   const [query, setQuery] = useState('')
   const [shown, setShown] = useState(60)
   const [viewerIndex, setViewerIndex] = useState<number | null>(null)
@@ -68,12 +70,13 @@ function CostumesPage() {
 
   const filtered = useMemo(() => {
     return baseCostumes.filter((item) => {
+      if (onlyFavorites && !isFavorite('costume', item)) return false
       if (activeCategory && item.分类 !== activeCategory) return false
       if (activeTag !== 'all' && !(item.标签 || []).includes(activeTag)) return false
       if (q && !item.检索.toLowerCase().includes(q)) return false
       return true
     })
-  }, [baseCostumes, activeCategory, activeTag, q])
+  }, [baseCostumes, activeCategory, activeTag, q, onlyFavorites, isFavorite])
 
   const currentItem = viewerIndex !== null ? filtered[viewerIndex] : null
 
@@ -163,6 +166,7 @@ function CostumesPage() {
         )}
       </div>
 
+      <Button variant={onlyFavorites ? 'default' : 'outline'} aria-pressed={onlyFavorites} onClick={() => { setOnlyFavorites(!onlyFavorites); setShown(60) }}>只看收藏</Button>
       {/* 搜索与单品筛选栏 */}
       <div className="grid gap-3 rounded-[22px] bg-muted p-4 @xl/main:grid-cols-2 @3xl/main:grid-cols-[minmax(0,1fr)_220px_auto]">
         <div className="relative">
@@ -205,6 +209,7 @@ function CostumesPage() {
           onClick={() => {
             setCategory('')
             setTag('all')
+            setOnlyFavorites(false)
             setQuery('')
             setKind('全部')
             setShown(60)
@@ -230,6 +235,7 @@ function CostumesPage() {
                   onClick={() => setViewerIndex(idx)}
                   className="relative aspect-2/3 cursor-zoom-in overflow-hidden rounded-2xl bg-background"
                 >
+                  <div className="absolute top-2 left-2 z-10"><FavoriteButton category="costume" item={item} /></div>
                   <img
                     src={referenceImageUrl(item.缩略图)}
                     alt={item.服装名称}
@@ -296,6 +302,7 @@ function CostumesPage() {
             return (
               <div className="grid md:grid-cols-[1fr_320px]">
                 <div className="relative flex max-h-[78dvh] min-h-[min(380px,65dvh)] items-center justify-center bg-muted/60 p-4">
+                  <div className="absolute top-2 left-2 z-10"><FavoriteButton category="costume" item={currentItem} /></div>
                   <img
                     src={referenceImageUrl(currentItem.预览图 || currentItem.原图)}
                     alt={currentItem.服装名称}

@@ -75,6 +75,8 @@ const PROVIDER_LIST: ImageProviderId[] = ['gemini', 'gpt', 'qwen', 'doubao', 'co
 
 function StudioPage() {
   const {
+    hydrated, libraryReady, libraryBusy, outfits, saveOutfit, loadOutfit, renameOutfit, deleteOutfit, setResultAsPortrait,
+    activeTask, resumeGeneration, stopTracking,
     recipe,
     apiConfig,
     history,
@@ -105,6 +107,8 @@ function StudioPage() {
     removeHistoryItem,
     clearHistory,
   } = useStudio()
+  const [outfitName, setOutfitName] = useState('')
+  const [selectedOutfit, setSelectedOutfit] = useState('')
   const qc = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const comfyFileInputRef = useRef<HTMLInputElement | null>(null)
@@ -1356,6 +1360,29 @@ function StudioPage() {
             )}
           </Section>
 
+          <Section title="保存搭配" className="@lg/section:grid-cols-1">
+            <div className="flex flex-wrap gap-2">
+              <Input aria-label="搭配名称" placeholder="搭配名称" value={outfitName} onChange={(e) => setOutfitName(e.target.value)} className="min-w-0 flex-1" />
+              <Button className="min-h-11" disabled={!libraryReady || libraryBusy || !outfitName.trim()} onClick={() => void saveOutfit(outfitName)}>保存当前搭配</Button>
+            </div>
+            <p className="text-xs text-muted-foreground">保存参考图、提示词、画风、工作流和生成参数；载入时保留连接地址与密钥。随机种子仍按保存的开关执行。</p>
+            {outfits.length > 0 && <div className="flex flex-wrap gap-2">
+              <Select value={selectedOutfit} onValueChange={(id) => {setSelectedOutfit(id); setOutfitName(outfits.find((x) => x.id === id)?.name || '')}}>
+                <SelectTrigger aria-label="已保存搭配" className="min-h-11 min-w-0 flex-1"><SelectValue placeholder="选择已保存搭配" /></SelectTrigger>
+                <SelectContent>{outfits.map((x) => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)}</SelectContent>
+              </Select>
+              <Button className="min-h-11" variant="outline" disabled={!libraryReady || libraryBusy || !selectedOutfit} onClick={() => loadOutfit(selectedOutfit)}>载入</Button>
+              <Button className="min-h-11" variant="outline" disabled={!libraryReady || libraryBusy || !selectedOutfit || !outfitName.trim()} onClick={() => void renameOutfit(selectedOutfit, outfitName)}>改名</Button>
+              <Button className="min-h-11" variant="ghost" disabled={!libraryReady || libraryBusy || !selectedOutfit} onClick={() => {void deleteOutfit(selectedOutfit); setSelectedOutfit('')}}>删除</Button>
+            </div>}
+          </Section>
+          {activeTask && <Section title="未决任务" className="@lg/section:grid-cols-1">
+            <p className="break-all text-xs">{activeTask.task ? `任务 ${activeTask.task.promptId}：刷新后查询原任务，不重复提交。` : '提交结果未知或提交前被中断，请核对后端队列；不会自动重试提交。'}</p>
+            <div className="flex flex-wrap gap-2">
+              <Button disabled={isGenerating || !activeTask.task} onClick={() => void resumeGeneration()}>恢复追踪</Button>
+              <Button variant="outline" onClick={() => void stopTracking()}>停止跟踪（不取消后端）</Button>
+            </div>
+          </Section>}
           {/* 3. 提示词与生成按钮 */}
           <Section
             title="3. 提示词 (Prompt)"
@@ -1389,7 +1416,7 @@ function StudioPage() {
 
             <Button
               onClick={handleGenerate}
-              disabled={isGenerating || uploadingSlot !== null}
+              disabled={!hydrated || Boolean(activeTask) || isGenerating || uploadingSlot !== null}
               className="h-11 w-full text-sm font-semibold"
             >
               {isGenerating ? (
@@ -1423,6 +1450,7 @@ function StudioPage() {
               ) : null
             }
           >
+            {previewUrl && !isGenerating && <Button variant="outline" onClick={() => void setResultAsPortrait(previewUrl)}>将当前成品作为人像参考</Button>}
             <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-2xl bg-background p-4 sm:min-h-[460px]">
               {isGenerating ? (
                 <div className="flex flex-col items-center gap-3 text-center">
@@ -1439,6 +1467,8 @@ function StudioPage() {
                     {generationProgress && (
                       <div className="w-56 max-w-full space-y-1.5 pt-1">
                         <div className="text-xs text-foreground/80">{generationProgress.message}</div>
+                        {generationProgress.connection && <p className="text-xs text-muted-foreground">连接：{{connecting: '连接中', connected: '实时连接正常', reconnecting: '重连中，HTTP 查询保底', degraded: '进度降级，使用 HTTP 查询'}[generationProgress.connection]}</p>}
+                        {generationProgress.percent !== undefined && <p className="text-xs text-muted-foreground">当前节点内采样进度，非整个工作流完成度</p>}
                         {generationProgress.percent !== undefined && (
                           <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                             <div
@@ -1457,7 +1487,7 @@ function StudioPage() {
               ) : generationError ? (
                 <div className="flex max-w-md flex-col items-center gap-2 text-center">
                   <CircleAlertIcon className="size-7 text-destructive" />
-                  <div className="text-sm font-semibold text-destructive">生成失败</div>
+                  <div className="text-sm font-semibold text-destructive">{activeTask ? "任务状态待确认" : "生成未完成"}</div>
                   <p className="whitespace-pre-wrap break-all text-left text-xs leading-relaxed text-muted-foreground">
                     {generationError}
                   </p>
@@ -1533,6 +1563,7 @@ function StudioPage() {
 
               <div className="mt-2 space-y-1.5 px-0.5">
                 <div className="truncate text-xs font-medium">{h.recipeSummary}</div>
+                <Button variant="outline" size="sm" className="w-full" onClick={() => void setResultAsPortrait(h.imageUrl)}>作为人像继续创作</Button>
                 <div className="grid grid-cols-2 gap-1.5">
                   <button
                     type="button"

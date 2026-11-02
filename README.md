@@ -4,6 +4,8 @@
 
 已合并的上游贡献：[参考槽直接上传与工作流校验 #19](https://github.com/anhao/ai-pose-gallery-zh/pull/19)、[动态高级参数与设定集参考 #23](https://github.com/anhao/ai-pose-gallery-zh/pull/23)、[响应式布局边界修复 #29](https://github.com/anhao/ai-pose-gallery-zh/pull/29)、[CharaDB 二次元服装接入 #30](https://github.com/anhao/ai-pose-gallery-zh/pull/30)。合并状态已于 2026-11-03 核对。
 
+新增[收藏、搭配保存、成品续创与任务恢复说明](docs/创作保存与任务恢复.md)。
+
 品牌使用原稿最右侧 I 标志（环抱弧线与层叠衣料），发布素材见 [public/brand](public/brand/README.md)。仓库名、插件标识和现有数据保持兼容。
 
 **个人在线版：** [图库首页](https://pose.boledev.dpdns.org/) · [角色合成台](https://pose.boledev.dpdns.org/studio)

@@ -163,3 +163,12 @@ export interface GenerationHistoryItem {
   imageUrl: string
   recipeSummary: string
 }
+
+export interface SavedOutfit {
+  id: string
+  name: string
+  recipe: RecipeState
+  prompt: string | null
+  settings: Omit<ApiConfig, 'providers'>
+  models: Record<ImageProviderId, Pick<ProviderEndpointConfig, 'model' | 'customModel'>>
+}

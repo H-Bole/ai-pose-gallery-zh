@@ -1,3 +1,4 @@
+import { FavoriteButton } from '@/components/common/FavoriteButton'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import {
@@ -37,12 +38,13 @@ const HAIRS = ['短发', '中发', '中长发', '长发'] as const
 
 function PortraitsPage() {
   const { data: portraits } = useSuspenseQuery(portraitsQuery)
-  const { recipe, togglePortrait } = useStudio()
+  const { recipe, togglePortrait, isFavorite } = useStudio()
 
   const [section, setSection] = useState<'' | '正脸参考' | '造型氛围'>('')
   const [hair, setHair] = useState('')
   const [styleName, setStyleName] = useState('all')
   const [onlyHot, setOnlyHot] = useState(false)
+  const [onlyFavorites, setOnlyFavorites] = useState(false)
   const [query, setQuery] = useState('')
   const [shown, setShown] = useState(60)
   const [viewerIndex, setViewerIndex] = useState<number | null>(null)
@@ -56,6 +58,7 @@ function PortraitsPage() {
 
   const filtered = useMemo(() => {
     return portraits.filter((item) => {
+      if (onlyFavorites && !isFavorite('portrait', item)) return false
       if (section && item.分区 !== section) return false
       if (hair && item.发长 !== hair) return false
       if (styleName !== 'all' && item.发型名称 !== styleName) return false
@@ -63,7 +66,7 @@ function PortraitsPage() {
       if (q && !item.检索.toLowerCase().includes(q)) return false
       return true
     })
-  }, [portraits, section, hair, styleName, onlyHot, q])
+  }, [portraits, section, hair, styleName, onlyHot, q, onlyFavorites, isFavorite])
 
   const currentItem = viewerIndex !== null ? filtered[viewerIndex] : null
 
@@ -162,6 +165,7 @@ function PortraitsPage() {
         })}
       </div>
 
+      <Button variant={onlyFavorites ? 'default' : 'outline'} aria-pressed={onlyFavorites} onClick={() => { setOnlyFavorites(!onlyFavorites); setShown(60) }}>只看收藏</Button>
       {/* 搜索与发型细分 */}
       <div className="grid gap-3 rounded-[22px] bg-muted p-4 @xl/main:grid-cols-2 @3xl/main:grid-cols-[minmax(0,1fr)_260px_auto]">
         <div className="relative">
@@ -206,6 +210,7 @@ function PortraitsPage() {
             setHair('')
             setStyleName('all')
             setOnlyHot(false)
+            setOnlyFavorites(false)
             setQuery('')
             setShown(60)
           }}
@@ -265,6 +270,7 @@ function PortraitsPage() {
                   </button>
                 </div>
 
+                <FavoriteButton category="portrait" item={item} />
                 <div className="px-1.5 pt-2.5 pb-1">
                   <div className="line-clamp-2 min-h-[34px] text-xs leading-snug font-semibold">{item.发型名称}</div>
                   <div className="mt-1 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
