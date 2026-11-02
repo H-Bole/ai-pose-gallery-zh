@@ -165,9 +165,8 @@ function PortraitsPage() {
         })}
       </div>
 
-      <Button variant={onlyFavorites ? 'default' : 'outline'} aria-pressed={onlyFavorites} onClick={() => { setOnlyFavorites(!onlyFavorites); setShown(60) }}>只看收藏</Button>
       {/* 搜索与发型细分 */}
-      <div className="grid gap-3 rounded-[22px] bg-muted p-4 @xl/main:grid-cols-2 @3xl/main:grid-cols-[minmax(0,1fr)_260px_auto]">
+      <div className="grid gap-3 rounded-[22px] bg-muted p-4 @xl/main:grid-cols-2 @3xl/main:grid-cols-[minmax(0,1fr)_260px_auto_auto]">
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -201,6 +200,8 @@ function PortraitsPage() {
           </SelectContent>
         </Select>
 
+        <Button className="min-h-11 w-auto justify-self-start" variant={onlyFavorites ? 'default' : 'outline'} aria-pressed={onlyFavorites} onClick={() => { setOnlyFavorites(!onlyFavorites); setShown(60) }}>只看收藏</Button>
+
         <Button
           variant="ghost"
           size="sm"
@@ -231,9 +232,11 @@ function PortraitsPage() {
                 key={item.id}
                 className="group flex flex-col overflow-hidden rounded-[20px] bg-muted p-2 transition hover:-translate-y-0.5 hover:shadow-md"
               >
-                <div
+                <button
+                  type="button"
+                  aria-label={`查看 ${item.id} 大图`}
                   onClick={() => setViewerIndex(idx)}
-                  className="relative aspect-4/5 cursor-zoom-in overflow-hidden rounded-2xl bg-background"
+                  className="relative block w-full shrink-0 aspect-4/5 cursor-zoom-in overflow-hidden rounded-2xl bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
                   <img
                     src={`/${item.缩略图}`}
@@ -241,36 +244,28 @@ function PortraitsPage() {
                     loading="lazy"
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
+                  <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
                     <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
                       {item.分区}
                     </span>
                     <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900">
                       {item.发长}
                     </span>
-                  </div>
+                  </span>
                   {item.热门 && (
                     <span className="absolute right-2 bottom-2 rounded-md bg-orange-500/90 px-1.5 py-0.5 text-[10px] font-bold text-white">
                       🔥 Top10
                     </span>
                   )}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      togglePortrait(item)
-                    }}
-                    className={cn(
-                      'absolute bottom-2 left-2 flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold text-white shadow transition',
-                      picked ? 'bg-emerald-600' : 'bg-black/75 hover:bg-primary'
-                    )}
-                  >
-                    {picked ? <CheckIcon className="size-3" /> : <PlusIcon className="size-3" />}
-                    {picked ? '已选' : '加入配方'}
-                  </button>
+                </button>
+                <div className="mt-2 flex min-h-11 items-center gap-2">
+                  <FavoriteButton category="portrait" item={item} compact />
+                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-xs" aria-pressed={picked} onClick={() => togglePortrait(item)}>
+                    {picked ? <CheckIcon className="size-4" /> : <PlusIcon className="size-4" />}
+                    {picked ? '已加入' : '加入搭配'}
+                  </Button>
                 </div>
 
-                <FavoriteButton category="portrait" item={item} />
                 <div className="px-1.5 pt-2.5 pb-1">
                   <div className="line-clamp-2 min-h-[34px] text-xs leading-snug font-semibold">{item.发型名称}</div>
                   <div className="mt-1 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
@@ -361,7 +356,8 @@ function PortraitsPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <Button onClick={() => togglePortrait(currentItem)} variant={picked ? 'secondary' : 'default'}>
+                    <FavoriteButton category="portrait" item={currentItem} />
+                    <Button className="min-h-11" onClick={() => togglePortrait(currentItem)} variant={picked ? 'secondary' : 'default'}>
                       {picked ? <CheckIcon className="size-4" /> : <PlusIcon className="size-4" />}
                       {picked ? '已在角色配方中（点击移除）' : '加入角色配方'}
                     </Button>
