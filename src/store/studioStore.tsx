@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { idbRead, idbWrite } from '@/lib/idbStorage'
 import { parseParameterWorkflow, workflowIdentity } from '@/lib/comfyWorkflowParameters'
+import { useSavedCreations } from './useSavedCreations'
 import { useCreativeLibrary } from './useCreativeLibrary'
 import { durableImage, snapshotGeneration } from '@/lib/generationSnapshot'
 import { recipeBackup } from '@/lib/recipeImages'
@@ -194,7 +195,7 @@ function mergeStoredConfig(raw: unknown): ApiConfig {
   }
 }
 
-interface StudioContextValue extends ReturnType<typeof useCreativeLibrary> {
+interface StudioContextValue extends ReturnType<typeof useCreativeLibrary>, ReturnType<typeof useSavedCreations> {
   hydrated: boolean
   recipeReveal: number
   generationReveal: number
@@ -408,6 +409,10 @@ export function StudioProvider({ children }: { children: ReactNode }) {
 
   const library = useCreativeLibrary({ hydrated: idbHydrated, recipe, config: apiConfig, prompt: customPrompt, safeMode,
     setRecipe, setPoseDepthMode: setPoseDepthModeState,
+    setConfig: setApiConfig, setPrompt: setCustomPrompt, unlock: requestUnlockNsfw })
+
+  const savedCreations = useSavedCreations({ hydrated: idbHydrated, config: apiConfig, safeMode,
+    setRecipe: (value) => { setRecipe(value); setPoseDepthModeState(Boolean(value.pose?.useDepth)) },
     setConfig: setApiConfig, setPrompt: setCustomPrompt, unlock: requestUnlockNsfw })
 
   const setPortrait = (portrait: PortraitItem | null) => setRecipe((r) => ({ ...r, portrait }))
@@ -695,7 +700,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   return (
     <StudioContext.Provider
       value={{
-        ...library, hydrated: idbHydrated, recipeReveal, generationReveal,
+        ...library, ...savedCreations, hydrated: idbHydrated, recipeReveal, generationReveal,
         activeTask, resumeGeneration, stopTracking,
         recipe,
         apiConfig,

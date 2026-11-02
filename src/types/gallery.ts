@@ -181,3 +181,11 @@ export interface GenerationSnapshot {
   models: Record<ImageProviderId, Pick<ProviderEndpointConfig, 'model' | 'customModel'>>
   submittedWorkflowJson?: string
 }
+
+export interface SavedCreation {
+  id: string
+  name: string
+  createdAt: number
+  result: GenerationHistoryItem
+  presentation?: import('./cards').CardPresentation
+}

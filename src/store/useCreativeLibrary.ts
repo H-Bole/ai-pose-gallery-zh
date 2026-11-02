@@ -23,6 +23,8 @@ export function useCreativeLibrary(input: {
   const [loaded, setReady] = useState(false)
   const libraryReady = loaded && input.hydrated
   const [libraryBusy, setBusy] = useState(false)
+  const latestConfig = useRef(input.config)
+  useEffect(() => { latestConfig.current = input.config }, [input.config])
   const latestRecipe = useRef(input.recipe)
   useEffect(() => { latestRecipe.current = input.recipe }, [input.recipe])
   const busy = useRef(false)
@@ -34,11 +36,11 @@ export function useCreativeLibrary(input: {
     return () => { active = false }
   }, [])
   const write = async (action: () => Promise<void>) => {
-    if (!libraryReady) { toast.error('浏览器数据尚未恢复'); return }
-    if (busy.current) { toast.info('正在保存，请稍后再试'); return }
+    if (!libraryReady) { toast.error('浏览器数据尚未恢复'); return false }
+    if (busy.current) { toast.info('正在保存，请稍后再试'); return false }
     busy.current = true
     setBusy(true)
-    try { await action() } catch (e) { toast.error(e instanceof Error ? `保存失败：${e.message}` : '保存失败，请检查浏览器存储空间') }
+    try { await action(); return true } catch (e) { toast.error(e instanceof Error ? `保存失败：${e.message}` : '保存失败，请检查浏览器存储空间'); return false }
     finally { busy.current = false; setBusy(false) }
   }
   const isFavorite = useCallback((category: string, item: {id: string; source?: string}) => favorites.includes(keyOf(category, item)), [favorites])
@@ -65,7 +67,7 @@ export function useCreativeLibrary(input: {
       input.setRecipe(item.recipe)
       input.setPoseDepthMode(Boolean(item.recipe.pose?.useDepth))
       input.setPrompt(item.prompt)
-      input.setConfig({ ...input.config, ...item.settings, providers: Object.fromEntries(Object.entries(input.config.providers).map(([key, value]) => [key, {...value, ...item.models[key as ImageProviderId]}])) as ApiConfig['providers'] })
+      input.setConfig({ ...latestConfig.current, ...item.settings, providers: Object.fromEntries(Object.entries(latestConfig.current.providers).map(([key, value]) => [key, {...value, ...item.models[key as ImageProviderId]}])) as ApiConfig['providers'] })
       toast.success('已载入搭配，保留当前连接地址和密钥')
     }
     if (input.safeMode && ((item.recipe.costume && isNsfwCostume(item.recipe.costume)) || (item.recipe.pose && isNsfwPose(item.recipe.pose)))) input.unlock(load)

@@ -1,3 +1,6 @@
+import { RevealSurface } from '@/components/motion/RevealSurface'
+import { CardViewer } from '@/components/cards/CardViewer'
+import { SaveCreationButton } from '@/components/studio/SaveCreationButton'
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
@@ -75,7 +78,7 @@ const PROVIDER_LIST: ImageProviderId[] = ['gemini', 'gpt', 'qwen', 'doubao', 'co
 
 function StudioPage() {
   const {
-    hydrated, libraryReady, libraryBusy, outfits, saveOutfit, loadOutfit, renameOutfit, deleteOutfit, setResultAsPortrait,
+    hydrated, recipeReveal, generationReveal, setResultAsPortrait,
     activeTask, resumeGeneration, stopTracking,
     recipe,
     apiConfig,
@@ -107,8 +110,9 @@ function StudioPage() {
     removeHistoryItem,
     clearHistory,
   } = useStudio()
-  const [outfitName, setOutfitName] = useState('')
-  const [selectedOutfit, setSelectedOutfit] = useState('')
+  const [cardUrl, setCardUrl] = useState('')
+  const [cardOpen, setCardOpen] = useState(false)
+  const previewResult = history.find((item) => item.imageUrl === previewUrl)
   const qc = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const comfyFileInputRef = useRef<HTMLInputElement | null>(null)
@@ -406,6 +410,7 @@ function StudioPage() {
           onDrop={handleDropFiles}
         >
           {/* 1. 参考图组合 */}
+          <RevealSurface eventKey={recipeReveal}>
           <Section
             title="1. 参考图组合"
             className="@lg/section:grid-cols-1"
@@ -723,6 +728,7 @@ function StudioPage() {
               )}
             </div>
           </Section>
+          </RevealSurface>
 
           {/* 2. 协议、模型与可折叠高级参数 */}
           <Section
@@ -1360,22 +1366,6 @@ function StudioPage() {
             )}
           </Section>
 
-          <Section title="保存搭配" className="@lg/section:grid-cols-1">
-            <div className="flex flex-wrap gap-2">
-              <Input aria-label="搭配名称" placeholder="搭配名称" value={outfitName} onChange={(e) => setOutfitName(e.target.value)} className="min-w-0 flex-1" />
-              <Button className="min-h-11" disabled={!libraryReady || libraryBusy || !outfitName.trim()} onClick={() => void saveOutfit(outfitName)}>保存当前搭配</Button>
-            </div>
-            <p className="text-xs text-muted-foreground">保存参考图、提示词、画风、工作流和生成参数；载入时保留连接地址与密钥。随机种子仍按保存的开关执行。</p>
-            {outfits.length > 0 && <div className="flex flex-wrap gap-2">
-              <Select value={selectedOutfit} onValueChange={(id) => {setSelectedOutfit(id); setOutfitName(outfits.find((x) => x.id === id)?.name || '')}}>
-                <SelectTrigger aria-label="已保存搭配" className="min-h-11 min-w-0 flex-1"><SelectValue placeholder="选择已保存搭配" /></SelectTrigger>
-                <SelectContent>{outfits.map((x) => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)}</SelectContent>
-              </Select>
-              <Button className="min-h-11" variant="outline" disabled={!libraryReady || libraryBusy || !selectedOutfit} onClick={() => loadOutfit(selectedOutfit)}>载入</Button>
-              <Button className="min-h-11" variant="outline" disabled={!libraryReady || libraryBusy || !selectedOutfit || !outfitName.trim()} onClick={() => void renameOutfit(selectedOutfit, outfitName)}>改名</Button>
-              <Button className="min-h-11" variant="ghost" disabled={!libraryReady || libraryBusy || !selectedOutfit} onClick={() => {void deleteOutfit(selectedOutfit); setSelectedOutfit('')}}>删除</Button>
-            </div>}
-          </Section>
           {activeTask && <Section title="未决任务" className="@lg/section:grid-cols-1">
             <p className="break-all text-xs">{activeTask.task ? `任务 ${activeTask.task.promptId}：刷新后查询原任务，不重复提交。` : '提交结果未知或提交前被中断，请核对后端队列；不会自动重试提交。'}</p>
             <div className="flex flex-wrap gap-2">
@@ -1450,7 +1440,12 @@ function StudioPage() {
               ) : null
             }
           >
-            {previewUrl && !isGenerating && <Button variant="outline" onClick={() => void setResultAsPortrait(previewUrl)}>将当前成品作为人像参考</Button>}
+            {previewUrl && !isGenerating && <div className="flex flex-wrap gap-2">
+              {previewResult && <SaveCreationButton result={previewResult} />}
+              <Button className="min-h-11" variant="outline" onClick={() => {setCardUrl(previewUrl);setCardOpen(true)}}>制卡与分享</Button>
+              <Button className="min-h-11" variant="outline" onClick={() => void setResultAsPortrait(previewUrl)}>继续创作</Button>
+            </div>}
+            <RevealSurface eventKey={generationReveal}>
             <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-2xl bg-background p-4 sm:min-h-[460px]">
               {isGenerating ? (
                 <div className="flex flex-col items-center gap-3 text-center">
@@ -1501,7 +1496,7 @@ function StudioPage() {
                 <img
                   src={previewUrl}
                   alt="生成结果"
-                  onClick={() => setZoomImageUrl(previewUrl)}
+                  onClick={() => {setCardUrl(previewUrl);setCardOpen(true)}}
                   title="点击放大查看"
                   className="max-h-[480px] w-auto cursor-zoom-in rounded-xl object-contain transition hover:opacity-95"
                 />
@@ -1512,6 +1507,7 @@ function StudioPage() {
                 </div>
               )}
             </div>
+            </RevealSurface>
           </Section>
         </div>
       </div>
@@ -1536,7 +1532,8 @@ function StudioPage() {
               <div
                 onClick={() => {
                   setPreviewUrl(h.imageUrl)
-                  setZoomImageUrl(h.imageUrl)
+                  setCardUrl(h.imageUrl)
+                  setCardOpen(true)
                 }}
                 className="relative aspect-3/4 cursor-zoom-in overflow-hidden rounded-xl bg-muted"
               >
@@ -1563,7 +1560,7 @@ function StudioPage() {
 
               <div className="mt-2 space-y-1.5 px-0.5">
                 <div className="truncate text-xs font-medium">{h.recipeSummary}</div>
-                <Button variant="outline" size="sm" className="w-full" onClick={() => void setResultAsPortrait(h.imageUrl)}>作为人像继续创作</Button>
+                <div className="grid gap-2"><SaveCreationButton result={h}/><Button variant="outline" className="min-h-11" onClick={() => {setCardUrl(h.imageUrl);setCardOpen(true)}}>制卡与分享</Button><Button variant="outline" className="min-h-11" onClick={() => void setResultAsPortrait(h.imageUrl)}>继续创作</Button></div>
                 <div className="grid grid-cols-2 gap-1.5">
                   <button
                     type="button"
@@ -1589,6 +1586,7 @@ function StudioPage() {
         </Section>
       )}
 
+      <CardViewer imageUrl={cardUrl} open={cardOpen} onOpenChange={setCardOpen}/>
       {/* 生成结果全屏放大灯箱 */}
       <Dialog open={Boolean(zoomImageUrl)} onOpenChange={(o) => !o && setZoomImageUrl(null)}>
         <DialogContent className="max-h-[92dvh] w-[95vw] max-w-4xl overflow-y-auto p-4 sm:max-w-4xl">
