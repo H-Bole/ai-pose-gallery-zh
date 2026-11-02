@@ -2,34 +2,10 @@ import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateA
 import { toast } from 'sonner'
 import { isNsfwCostume, isNsfwPose } from '@/api/gallery'
 import { idbRead, idbWrite } from '@/lib/idbStorage'
+import { durableImage, durableRecipe } from '@/lib/generationSnapshot'
 import { uploadedReferences } from '@/lib/recipeImages'
 import type { ApiConfig, ImageProviderId, RecipeState, SavedOutfit } from '@/types/gallery'
 
-export async function durableImage(url: string): Promise<string> {
-  if (url.startsWith('data:image/')) return url
-  const response = await fetch(url)
-  if (!response.ok) throw new Error('图片下载失败')
-  const blob = await response.blob()
-  if (!blob.type.startsWith('image/')) throw new Error('引用不是图片')
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(new Error('图片读取失败'))
-    reader.readAsDataURL(blob)
-  })
-}
-async function durableRecipe(recipe: RecipeState) {
-  const next = structuredClone(recipe)
-  for (const item of [next.portrait, next.costume, next.pose]) {
-    if (item?.source === 'upload') {
-      item.原图 = await durableImage(item.原图)
-      item.缩略图 = item.原图
-      if ('预览图' in item) item.预览图 = item.原图
-    }
-  }
-  for (const image of [...(next.extraImages || []), ...Object.values(next.workflowImages || {})]) image.url = await durableImage(image.url)
-  return next
-}
 const FAVORITES = 'pose_atlas_favorites_v1'
 const OUTFITS = 'pose_atlas_outfits_v1'
 const keyOf = (category: string, item: {id: string; source?: string}) => JSON.stringify([category, item.source || 'gallery', item.id])

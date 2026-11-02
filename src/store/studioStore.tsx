@@ -13,7 +13,8 @@ import {
 } from '@/components/ui/alert-dialog'
 import { idbRead, idbWrite } from '@/lib/idbStorage'
 import { parseParameterWorkflow, workflowIdentity } from '@/lib/comfyWorkflowParameters'
-import { useCreativeLibrary, durableImage } from './useCreativeLibrary'
+import { useCreativeLibrary } from './useCreativeLibrary'
+import { durableImage, snapshotGeneration } from '@/lib/generationSnapshot'
 import { recipeBackup } from '@/lib/recipeImages'
 import {
   buildRecipePrompt,
@@ -36,6 +37,7 @@ import type {
   ExtraReferenceImage,
   GeminiParams,
   GenerationHistoryItem,
+  GenerationSnapshot,
   GptParams,
   ImageProviderId,
   PortraitItem,
@@ -49,7 +51,7 @@ const CFG_KEY = 'pose_atlas_api_config_v3'
 const RECIPE_KEY = 'pose_atlas_recipe_v3'
 const HISTORY_KEY = 'pose_atlas_history_v3'
 const TASK_KEY = 'pose_atlas_active_task_v1'
-type ActiveTask = { task?: ComfyTaskHandle; prompt: string; summary: string; unknown?: boolean }
+type ActiveTask = { task?: ComfyTaskHandle; prompt: string; summary: string; unknown?: boolean; snapshot?: GenerationSnapshot }
 const SAFE_MODE_KEY = 'pose_atlas_safe_mode_v1'
 
 const COMFY_CONFIG_VERSION = 3
@@ -605,7 +607,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     const id = record.task ? `comfy:${record.task.baseUrl}:${record.task.promptId}` : crypto.randomUUID()
     await persistHistory((current) => {
       signal.throwIfAborted()
-      return [{ id, createdAt: Date.now(), imageUrl, provider: result.providerUsed, model: result.modelUsed, prompt: record.prompt, recipeSummary: record.summary }, ...current.filter((x) => x.id !== id)].slice(0, 30)
+      return [{ id, createdAt: Date.now(), imageUrl, provider: result.providerUsed, model: result.modelUsed, prompt: record.prompt, recipeSummary: record.summary, snapshot: record.snapshot }, ...current.filter((x) => x.id !== id)].slice(0, 30)
     })
     signal.throwIfAborted()
     await saveActive(null)
@@ -662,9 +664,16 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     const controller = new AbortController()
     trackingRef.current = controller
     try {
+      record.snapshot = await snapshotGeneration(recipeSnapshot, configSnapshot, finalPrompt)
+      controller.signal.throwIfAborted()
       if (configSnapshot.activeProvider === 'comfyui') await idbWrite(TASK_KEY, null)
       const result = await generateCharacterImage({ recipe: recipeSnapshot, prompt: finalPrompt, config: configSnapshot, onProgress: setGenerationProgress, signal: controller.signal,
-        onSubmitting: async () => { controller.signal.throwIfAborted(); await saveActive({ ...record, unknown: true }); controller.signal.throwIfAborted() },
+        onSubmitting: async (prepared) => {
+          controller.signal.throwIfAborted()
+          if (record.snapshot && prepared) record.snapshot.submittedWorkflowJson = JSON.stringify(prepared.workflow)
+          await saveActive({ ...record, unknown: true })
+          controller.signal.throwIfAborted()
+        },
         onSubmitted: async (task) => {
           if (controller.signal.aborted) return
           record = { ...record, task }
