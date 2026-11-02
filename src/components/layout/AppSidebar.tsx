@@ -71,15 +71,15 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild tooltip="当前角色配方">
+            <SidebarMenuButton size="lg" asChild tooltip="当前搭配">
               <Link to="/studio" className="bg-sidebar-accent/70 hover:bg-sidebar-accent">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <SparklesIcon className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-xs leading-tight">
-                  <span className="truncate font-semibold">角色配方槽 ({count}/3)</span>
+                  <span className="truncate font-semibold">当前搭配 ({count}/3)</span>
                   <span className="truncate text-[11px] text-muted-foreground">
-                    {count === 0 ? '未选择 · 点击去捏人' : '点击进入 创作间'}
+                    {count === 0 ? '未选择 · 打开创作间' : '点击进入创作间'}
                   </span>
                 </div>
               </Link>
