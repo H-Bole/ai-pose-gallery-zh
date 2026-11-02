@@ -56,14 +56,14 @@ function CardEditor({ imageUrl, open, onOpenChange, initialPresentation, onSaveP
       } else if (kind === 'png' && image) {
         const output = document.createElement('canvas')
         renderCard(output, image, presentation)
-        downloadCardBlob(await cardPngBlob(output), `衣想天开-${presentation.layout}-${presentation.finish}.png`)
+        downloadCardBlob(await cardPngBlob(output), `作品卡面-${presentation.layout}-${presentation.finish}.png`)
         if (mounted.current) setNotice('PNG 已生成；导出保留当前光位与构图。')
       } else if (kind === 'original') {
         const response = await fetch(imageUrl)
         if (!response.ok) throw new Error('原图下载失败，请检查图片链接。')
         const blob = await response.blob()
         const extension = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : blob.type === 'image/jpeg' ? 'jpg' : 'image'
-        downloadCardBlob(blob, `衣想天开-原图.${extension}`)
+        downloadCardBlob(blob, `作品卡面-原图.${extension}`)
         if (mounted.current) setNotice('原图已下载。')
       }
     } catch (e) { if (mounted.current) setError(e instanceof Error ? e.message : '操作失败，编辑内容已保留，请重试。') }
@@ -72,7 +72,7 @@ function CardEditor({ imageUrl, open, onOpenChange, initialPresentation, onSaveP
   const dirty = saved !== JSON.stringify(presentation)
   const range = (key: 'cropX' | 'cropY' | 'lightX' | 'lightY', label: string) => <label className="card-range" key={key}><span>{label}<output>{Math.round(presentation[key] * 100)}%</output></span><input type="range" min="0" max="1" step="0.01" value={presentation[key]} onChange={e => change(key, Number(e.target.value))} /></label>
   return <Dialog.Root open={open} onOpenChange={onOpenChange}><Dialog.Portal><Dialog.Overlay className="card-viewer-overlay" /><Dialog.Content className="card-viewer" aria-describedby="card-viewer-description" onOpenAutoFocus={() => { returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null }} onCloseAutoFocus={event => { if (returnFocus.current?.isConnected) { event.preventDefault(); returnFocus.current.focus() } }}>
-    <header className="card-viewer-heading"><div><span className="card-eyebrow">衣想天开 · CARD ATELIER</span><Dialog.Title>让灵感，成为珍藏</Dialog.Title><Dialog.Description id="card-viewer-description">保留原图，或为这一次创作定制专属卡面。</Dialog.Description></div><Dialog.Close className="card-icon-button" aria-label="关闭卡牌展示"><X size={22} /></Dialog.Close></header>
+    <header className="card-viewer-heading"><div><span className="card-eyebrow">作品卡面 · CARD ATELIER</span><Dialog.Title>让灵感，成为珍藏</Dialog.Title><Dialog.Description id="card-viewer-description">保留原图，或为这一次创作定制专属卡面。</Dialog.Description></div><Dialog.Close className="card-icon-button" aria-label="关闭卡牌展示"><X size={22} /></Dialog.Close></header>
     <div className="card-viewer-body">
       <section className="card-stage" aria-label="卡面预览">
         <div className="card-stage-orbit" aria-hidden="true" />
