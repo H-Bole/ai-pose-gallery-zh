@@ -42,7 +42,7 @@ function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="AI 角色参考库" />
+      <PageHeader title="衣想天开 · AI 角色参考库" />
 
       {/* 核心数据指标卡片 */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

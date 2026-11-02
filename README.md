@@ -1,6 +1,10 @@
-# AI 角色参考与合成工作台 · H-Bole 个人版（3合1）
+# 衣想天开 · AI 角色参考与合成工作台
 
-本版本由 **H-Bole 基于 Anhao 中文版二次开发**，由 **GPT6.1 Sol 协助开发**。
+**H-Bole 是本个人版维护者，也是上游多项核心功能贡献者。** 本版本基于 Anhao 中文版持续维护，保留上游、图库作者归属及原许可证。
+
+已合并的上游贡献：[参考槽直接上传与工作流校验 #19](https://github.com/anhao/ai-pose-gallery-zh/pull/19)、[动态高级参数与设定集参考 #23](https://github.com/anhao/ai-pose-gallery-zh/pull/23)、[响应式布局边界修复 #29](https://github.com/anhao/ai-pose-gallery-zh/pull/29)、[CharaDB 二次元服装接入 #30](https://github.com/anhao/ai-pose-gallery-zh/pull/30)。合并状态已于 2026-11-03 核对。
+
+品牌使用原稿最右侧 I 标志（环抱弧线与层叠衣料），发布素材见 [public/brand](public/brand/README.md)。仓库名、插件标识和现有数据保持兼容。
 
 **个人在线版：** [图库首页](https://pose.boledev.dpdns.org/) · [角色合成台](https://pose.boledev.dpdns.org/studio)
 **个人仓库：** [H-Bole/ai-pose-gallery-zh](https://github.com/H-Bole/ai-pose-gallery-zh)

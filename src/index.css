@@ -49,7 +49,7 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
+    --background: oklch(0.99 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -67,19 +67,19 @@
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
-    /* 图表色：1 报纸红（主指标）2 微信绿 3 金色（会员）4 蓝 5 紫 */
+    /* 功能图表色保持可辨识，第五色使用中性灰。 */
     --chart-1: oklch(0.58 0.19 25);
     --chart-2: oklch(0.68 0.17 150);
     --chart-3: oklch(0.76 0.13 75);
     --chart-4: oklch(0.6 0.15 250);
-    --chart-5: oklch(0.6 0.15 300);
+    --chart-5: oklch(0.55 0 0);
     --radius: 0.625rem;
-    /* 参考 linux-do/cdk：侧边栏 gray-50 底色、无边框，选中项 gray-100 */
-    --sidebar: rgb(249, 250, 251);
+    /* 中性侧栏衬底，保持图库内容优先。 */
+    --sidebar: oklch(0.975 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: rgb(243, 244, 246);
+    --sidebar-accent: oklch(0.94 0 0);
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: transparent;
     --sidebar-ring: oklch(0.708 0 0);
@@ -108,12 +108,12 @@
     --chart-2: oklch(0.74 0.15 150);
     --chart-3: oklch(0.8 0.12 75);
     --chart-4: oklch(0.7 0.13 250);
-    --chart-5: oklch(0.7 0.13 300);
-    --sidebar: rgb(31, 41, 55);
+    --chart-5: oklch(0.7 0 0);
+    --sidebar: oklch(0.18 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: rgb(55, 65, 81);
+    --sidebar-primary: oklch(0.922 0 0);
+    --sidebar-primary-foreground: oklch(0.205 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: transparent;
     --sidebar-ring: oklch(0.556 0 0);

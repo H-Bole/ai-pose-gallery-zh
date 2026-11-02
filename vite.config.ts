@@ -116,7 +116,7 @@ const comfyProxy = {
 }
 
 export default defineConfig({
-  publicDir: false,
+  publicDir: 'public',
   plugins: [
     localAssetsAndProxyPlugin(),
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),

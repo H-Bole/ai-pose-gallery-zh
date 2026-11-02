@@ -24,7 +24,7 @@ export interface NavGroup {
 
 export const navGroups: NavGroup[] = [
   {
-    label: '工作台',
+    label: '衣想天开',
     items: [
       { title: '图库总览', to: '/', icon: LayoutDashboardIcon },
       { title: 'AI 角色合成台', to: '/studio', icon: SparklesIcon, badge: 'PRO' },

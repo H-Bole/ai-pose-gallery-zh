@@ -1,5 +1,5 @@
 import { Link, useLocation } from '@tanstack/react-router'
-import { ExternalLinkIcon, LayersIcon, SparklesIcon } from 'lucide-react'
+import { ExternalLinkIcon, SparklesIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import {
   Sidebar,
@@ -28,13 +28,14 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link to="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <LayersIcon className="size-4" />
+              <Link to="/" aria-label="衣想天开首页">
+                <div className="flex aspect-square size-8 shrink-0 items-center justify-center">
+                  <img src="/brand/logo.svg" alt="" className="size-8 dark:hidden" />
+                  <img src="/brand/logo-white.svg" alt="" className="hidden size-8 dark:block" />
                 </div>
                 <div className="grid flex-1 text-left leading-tight">
-                  <span className="truncate text-sm font-semibold">POSE &amp; CHARACTER</span>
-                  <span className="truncate text-xs text-muted-foreground">AI 角色三合一参考台</span>
+                  <span className="truncate text-sm font-semibold">衣想天开</span>
+                  <span className="truncate text-xs text-muted-foreground">AI 角色参考与合成</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -85,7 +86,7 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton size="sm" asChild tooltip="访问 H-Bole 二次开发仓库">
+            <SidebarMenuButton size="sm" asChild tooltip="访问衣想天开 · H-Bole 个人版仓库">
               <a
                 href="https://github.com/H-Bole/ai-pose-gallery-zh"
                 target="_blank"
