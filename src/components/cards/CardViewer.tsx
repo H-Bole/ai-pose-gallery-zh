@@ -62,6 +62,7 @@ function CardEditor({ imageUrl, open, onOpenChange, initialPresentation, onSaveP
         const response = await fetch(imageUrl)
         if (!response.ok) throw new Error('原图下载失败，请检查图片链接。')
         const blob = await response.blob()
+        if (!blob.size || !blob.type.startsWith('image/')) throw new Error('原图响应不是有效图片，请重试。')
         const extension = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : blob.type === 'image/jpeg' ? 'jpg' : 'image'
         downloadCardBlob(blob, `作品卡面-原图.${extension}`)
         if (mounted.current) setNotice('原图已下载。')

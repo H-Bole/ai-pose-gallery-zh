@@ -144,7 +144,7 @@ export function renderCard(canvas: HTMLCanvasElement, image: HTMLImageElement, p
 export function cardPngBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   return new Promise((resolve, reject) => {
     try { canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('PNG 生成失败，请重试。')), 'image/png') }
-    catch { reject(new Error('图片服务器未授权导出（CORS），请使用下载原图或更换本地图片。')) }
+    catch (error) { reject(new Error(error instanceof DOMException && error.name === 'SecurityError' ? '图片服务器未授权导出（CORS），请使用下载原图或更换本地图片。' : 'PNG 生成失败，编辑内容已保留，请重试。')) }
   })
 }
 
