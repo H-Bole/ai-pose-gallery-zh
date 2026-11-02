@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/components/theme/ThemeProvider'
 import { StudioProvider } from '@/store/studioStore'
 import { routeTree } from './routeTree.gen'
 import './index.css'
+import './notifications.css'
 
 // 仅个人生产站启用统计，避免本地预览和其他 fork 污染数据。
 if (import.meta.env.PROD && window.location.hostname === 'pose.boledev.dpdns.org') {
