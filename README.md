@@ -4,11 +4,11 @@
 
 已合并的上游贡献：[参考槽直接上传与工作流校验 #19](https://github.com/anhao/ai-pose-gallery-zh/pull/19)、[动态高级参数与设定集参考 #23](https://github.com/anhao/ai-pose-gallery-zh/pull/23)、[响应式布局边界修复 #29](https://github.com/anhao/ai-pose-gallery-zh/pull/29)、[CharaDB 二次元服装接入 #30](https://github.com/anhao/ai-pose-gallery-zh/pull/30)。合并状态已于 2026-11-03 核对。
 
-新增[收藏、搭配保存、成品续创与任务恢复说明](docs/创作保存与任务恢复.md)。
+新增[收藏、搭配保存、成品续创与任务恢复说明](docs/创作保存与任务恢复.md)。界面维护遵循[统一界面与图片查看规范](docs/界面规范.md)。
 
 品牌使用原稿最右侧 I 标志（环抱弧线与层叠衣料），发布素材见 [public/brand](public/brand/README.md)。仓库名、插件标识和现有数据保持兼容。
 
-**个人在线版：** [图库首页](https://pose.boledev.dpdns.org/) · [角色合成台](https://pose.boledev.dpdns.org/studio)
+**个人在线版：** [图库首页](https://pose.boledev.dpdns.org/) · [创作间](https://pose.boledev.dpdns.org/studio)
 **个人仓库：** [H-Bole/ai-pose-gallery-zh](https://github.com/H-Bole/ai-pose-gallery-zh)
 
 > **姿势库（1,439 张素体白模 + 1,439 张深度图 Depth） + 服装库（现实 1,407 套 + 二次元 440 套） + 人像库（1,499 位） = 4,785 条全中文参考数据 / 11,568 张本地高清图，另有 440 张来源站点参考图**，集成 **5 大 AI 图像协议直连工作台** 与 **原生 ComfyUI 自定义节点插件（`custom_nodes`）**。
