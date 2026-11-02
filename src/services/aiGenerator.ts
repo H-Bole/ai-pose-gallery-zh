@@ -8,6 +8,10 @@ export interface ProviderModelOption {
   label: string
 }
 
+export interface PreparedComfyGeneration {
+  workflow: Record<string, unknown>
+}
+
 export const PROVIDER_META: Record<
   ImageProviderId,
   {
@@ -1306,7 +1310,7 @@ async function generateWithComfyUi(params: {
   baseUrl: string
   apiKey: string
   onProgress?: (p: GenerationProgress) => void
-  onSubmitting?: () => Promise<void>
+  onSubmitting?: (prepared?: PreparedComfyGeneration) => Promise<void>
   onSubmitted?: (task: ComfyTaskHandle) => Promise<void>
   signal?: AbortSignal
 }): Promise<{ imageUrl: string; modelUsed: string; providerUsed: ImageProviderId }> {
@@ -1427,7 +1431,7 @@ async function generateWithComfyUi(params: {
 
   // /prompt is not idempotent: never retry an ambiguous submission.
   checkTrackingSignal(params.signal)
-  await params.onSubmitting?.()
+  await params.onSubmitting?.({ workflow: JSON.parse(JSON.stringify(workflow)) })
   checkTrackingSignal(params.signal)
   const clientId = `pose_studio_${crypto.randomUUID()}`
   const submittedAt = Date.now()
@@ -1469,7 +1473,7 @@ export async function generateCharacterImage(params: {
   prompt: string
   config: ApiConfig
   onProgress?: (p: GenerationProgress) => void
-  onSubmitting?: () => Promise<void>
+  onSubmitting?: (prepared?: PreparedComfyGeneration) => Promise<void>
   onSubmitted?: (task: ComfyTaskHandle) => Promise<void>
   signal?: AbortSignal
 }): Promise<{ imageUrl: string; modelUsed: string; providerUsed: ImageProviderId }> {
