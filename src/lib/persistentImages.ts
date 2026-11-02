@@ -26,4 +26,3 @@ export async function durableRecipe(recipe: RecipeState) {
   for (const image of [...(next.extraImages || []), ...Object.values(next.workflowImages || {})]) image.url = await durableImage(image.url)
   return next
 }
-
