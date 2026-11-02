@@ -1,14 +1,13 @@
-import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { toast } from 'sonner'
 import { isNsfwCostume, isNsfwPose } from '@/api/gallery'
 import { idbRead, idbWrite } from '@/lib/idbStorage'
-import { durableImage, durableRecipe } from '@/lib/generationSnapshot'
+import { durableImage, durableRecipe } from '@/lib/persistentImages'
+import { useFavorites } from './useFavorites'
 import { uploadedReferences } from '@/lib/recipeImages'
 import type { ApiConfig, ImageProviderId, RecipeState, SavedOutfit } from '@/types/gallery'
 
-const FAVORITES = 'pose_atlas_favorites_v1'
 const OUTFITS = 'pose_atlas_outfits_v1'
-const keyOf = (category: string, item: {id: string; source?: string}) => JSON.stringify([category, item.source || 'gallery', item.id])
 export function useCreativeLibrary(input: {
   hydrated: boolean
   recipe: RecipeState; config: ApiConfig; prompt: string | null; safeMode: boolean
@@ -18,7 +17,7 @@ export function useCreativeLibrary(input: {
   setPrompt: (prompt: string | null) => void
   unlock: (callback: () => void) => void
 }) {
-  const [favorites, setFavorites] = useState<string[]>([])
+  const favoriteState = useFavorites(input.hydrated)
   const [outfits, setOutfits] = useState<SavedOutfit[]>([])
   const [loaded, setReady] = useState(false)
   const libraryReady = loaded && input.hydrated
@@ -30,8 +29,8 @@ export function useCreativeLibrary(input: {
   const busy = useRef(false)
   useEffect(() => {
     let active = true
-    Promise.all([idbRead<string[]>(FAVORITES), idbRead<SavedOutfit[]>(OUTFITS)]).then(([f, o]) => {
-      if (active) { setFavorites(f || []); setOutfits(o || []); setReady(true) }
+    idbRead<SavedOutfit[]>(OUTFITS).then((o) => {
+      if (active) { setOutfits(o || []); setReady(true) }
     }).catch(() => { if (active) toast.error('收藏与搭配读取失败，已暂停保存以保护原数据') })
     return () => { active = false }
   }, [])
@@ -43,13 +42,6 @@ export function useCreativeLibrary(input: {
     try { await action(); return true } catch (e) { toast.error(e instanceof Error ? `保存失败：${e.message}` : '保存失败，请检查浏览器存储空间'); return false }
     finally { busy.current = false; setBusy(false) }
   }
-  const isFavorite = useCallback((category: string, item: {id: string; source?: string}) => favorites.includes(keyOf(category, item)), [favorites])
-  const toggleFavorite = (category: string, item: {id: string; source?: string}) => write(async () => {
-    const key = keyOf(category, item)
-    const next = favorites.includes(key) ? favorites.filter((x) => x !== key) : [...favorites, key]
-    await idbWrite(FAVORITES, next)
-    setFavorites(next)
-  })
   const saveOutfit = (name: string) => write(async () => {
     if (!name.trim()) return
     const { providers, ...settings } = input.config
@@ -90,5 +82,5 @@ export function useCreativeLibrary(input: {
     input.setRecipe((current) => ({...current, portrait}))
     toast.success('已作为人像参考，其他参考与参数保留')
   })
-  return {libraryReady, libraryBusy, favorites, isFavorite, toggleFavorite, outfits, saveOutfit, loadOutfit, renameOutfit, deleteOutfit, setResultAsPortrait}
+  return {...favoriteState, libraryReady: libraryReady && favoriteState.libraryReady, libraryBusy: libraryBusy || favoriteState.libraryBusy, outfits, saveOutfit, loadOutfit, renameOutfit, deleteOutfit, setResultAsPortrait}
 }
