@@ -1,3 +1,4 @@
+import { ZoomViewport } from '@/components/common/ZoomViewport'
 import { TiltSurface } from '@/components/motion/TiltSurface'
 import { FavoriteButton } from '@/components/common/FavoriteButton'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -248,15 +249,15 @@ function PortraitsPage() {
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                     />
                     <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
-                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-xs font-bold text-white">
                         {item.分区}
                       </span>
-                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900">
+                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-xs font-semibold text-zinc-900">
                         {item.发长}
                       </span>
                     </span>
                     {item.热门 && (
-                      <span className="absolute right-2 bottom-2 rounded-md bg-orange-500/90 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                      <span className="absolute right-2 bottom-2 rounded-md bg-orange-500/90 px-1.5 py-0.5 text-xs font-bold text-white">
                         🔥 Top10
                       </span>
                     )}
@@ -264,15 +265,15 @@ function PortraitsPage() {
                 </TiltSurface>
                 <div className="mt-2 flex min-h-11 items-center gap-2">
                   <FavoriteButton category="portrait" item={item} compact />
-                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-xs" aria-pressed={picked} onClick={() => togglePortrait(item)}>
+                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-sm" aria-pressed={picked} onClick={() => togglePortrait(item)}>
                     {picked ? <CheckIcon className="size-4" /> : <PlusIcon className="size-4" />}
                     {picked ? '已加入' : '加入搭配'}
                   </Button>
                 </div>
 
                 <div className="px-1.5 pt-2.5 pb-1">
-                  <div className="line-clamp-2 min-h-[34px] text-xs leading-snug font-semibold">{item.发型名称}</div>
-                  <div className="mt-1 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
+                  <div className="line-clamp-2 min-h-[34px] text-sm leading-snug font-semibold">{item.发型名称}</div>
+                  <div className="mt-1 flex items-center justify-between font-mono text-xs text-muted-foreground">
                     <span>{item.id}</span>
                     <span>CC0</span>
                   </div>
@@ -299,15 +300,11 @@ function PortraitsPage() {
             return (
               <div className="grid md:grid-cols-[1fr_320px]">
                 <div className="relative flex max-h-[78dvh] min-h-[min(380px,65dvh)] items-center justify-center bg-muted/60 p-4">
-                  <img
-                    src={`/${currentItem.原图}`}
-                    alt={currentItem.标题}
-                    className="max-h-[72dvh] w-auto rounded-lg object-contain"
-                  />
+                  <ZoomViewport imageUrl={`/${currentItem.原图}`} alt={currentItem.标题} className="h-[65dvh]" />
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full shadow"
+                    aria-label="上一张图片" className="absolute top-1/2 left-3 min-h-11 min-w-11 -translate-y-1/2 rounded-full shadow"
                     onClick={() => setViewerIndex((viewerIndex - 1 + filtered.length) % filtered.length)}
                   >
                     <ChevronLeftIcon className="size-4" />
@@ -315,7 +312,7 @@ function PortraitsPage() {
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full shadow"
+                    aria-label="下一张图片" className="absolute top-1/2 right-3 min-h-11 min-w-11 -translate-y-1/2 rounded-full shadow"
                     onClick={() => setViewerIndex((viewerIndex + 1) % filtered.length)}
                   >
                     <ChevronRightIcon className="size-4" />
@@ -330,7 +327,7 @@ function PortraitsPage() {
                         <Badge variant="outline">{currentItem.发长}</Badge>
                         {currentItem.热门 && <Badge variant="secondary">🔥 Top10</Badge>}
                       </div>
-                      <DialogTitle className="mt-2 text-base leading-snug">{currentItem.标题}</DialogTitle>
+                      <DialogTitle className="mt-2 text-lg leading-snug font-semibold">{currentItem.标题}</DialogTitle>
                     </DialogHeader>
 
                     <div className="flex items-center justify-between rounded-lg bg-muted px-2.5 py-1.5 font-mono text-xs">
@@ -347,7 +344,7 @@ function PortraitsPage() {
                       </button>
                     </div>
 
-                    <dl className="grid grid-cols-[72px_1fr] gap-y-1.5 text-xs">
+                    <dl className="grid grid-cols-[72px_1fr] gap-y-1.5 text-sm">
                       <dt className="text-muted-foreground">发型款式</dt>
                       <dd className="font-medium">{currentItem.发型名称}</dd>
                       <dt className="text-muted-foreground">原图尺寸</dt>

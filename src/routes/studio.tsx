@@ -1,4 +1,5 @@
 import { RevealSurface } from '@/components/motion/RevealSurface'
+import { ImageViewer } from '@/components/common/ImageViewer'
 import { CardViewer } from '@/components/cards/CardViewer'
 import { SaveCreationButton } from '@/components/studio/SaveCreationButton'
 import { useQueryClient } from '@tanstack/react-query'
@@ -37,7 +38,7 @@ import { applyWorkflowOverrides, validateReferenceCombinations, workflowIdentity
 import { PageHeader } from '@/components/common/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
@@ -86,7 +87,6 @@ function StudioPage() {
     customPrompt,
     setCustomPrompt,
     previewUrl,
-    setPreviewUrl,
     isGenerating,
     generatingModel,
     generationProgress,
@@ -472,7 +472,7 @@ function StudioPage() {
                     </button>
                     <div className="flex min-h-12 min-w-0 flex-1 flex-col justify-between gap-1">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="shrink-0 text-[11px] text-muted-foreground">人像</span>
+                        <span className="shrink-0 text-xs text-muted-foreground">人像</span>
                         <button
                           type="button"
                           aria-label="清除人像参考图"
@@ -522,7 +522,7 @@ function StudioPage() {
                     </button>
                     <div className="flex min-h-12 min-w-0 flex-1 flex-col justify-between gap-1">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="shrink-0 text-[11px] text-muted-foreground">服装</span>
+                        <span className="shrink-0 text-xs text-muted-foreground">服装</span>
                         <button
                           type="button"
                           aria-label="清除服装参考图"
@@ -573,12 +573,12 @@ function StudioPage() {
                     <div className="flex min-h-12 min-w-0 flex-1 flex-col justify-between gap-1">
                       <div className="flex items-center justify-between gap-1">
                         <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-                          <span className="shrink-0 text-[11px] text-muted-foreground">姿势</span>
+                          <span className="shrink-0 text-xs text-muted-foreground">姿势</span>
                           {recipe.pose.source !== 'upload' && (
                             <div
                               role="group"
                               aria-label="切换素体白模或深度图"
-                              className="inline-flex shrink-0 items-center rounded-md border border-border/70 bg-muted/70 p-0.5 text-[10px] leading-none"
+                              className="inline-flex shrink-0 items-center rounded-md border border-border/70 bg-muted/70 p-0.5 text-xs leading-none"
                             >
                               <button
                                 type="button"
@@ -661,7 +661,7 @@ function StudioPage() {
                         className="h-11 w-9 shrink-0 rounded-lg object-cover"
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="text-[10px] text-muted-foreground">附图 #{idx + 1}</div>
+                        <div className="text-xs text-muted-foreground">附图 #{idx + 1}</div>
                         <input
                           type="text"
                           value={img.name}
@@ -705,7 +705,7 @@ function StudioPage() {
                     e.stopPropagation()
                     setShowUrlInput((s) => !s)
                   }}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium text-primary hover:bg-primary/10"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-primary hover:bg-primary/10"
                 >
                   <LinkIcon className="size-3" />
                   输入图片 URL
@@ -718,7 +718,7 @@ function StudioPage() {
                     value={extraUrlInput}
                     onChange={(e) => setExtraUrlInput(e.target.value)}
                     placeholder="粘贴 https://... 图片地址"
-                    className="bg-background text-xs"
+                    className="bg-background text-sm"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddUrl()}
                   />
                   <Button size="sm" onClick={handleAddUrl}>
@@ -772,16 +772,16 @@ function StudioPage() {
                       handleSelectComfyPreset(v as ComfyUiParams['workflowPreset'])
                     }
                   >
-                    <SelectTrigger className="w-full text-xs">
+                    <SelectTrigger className="w-full text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {(Object.keys(COMFYUI_WORKFLOW_TEMPLATES) as ComfyPresetId[]).map((key) => (
-                        <SelectItem key={key} value={key} className="text-xs">
+                        <SelectItem key={key} value={key} className="text-sm">
                           {COMFYUI_WORKFLOW_TEMPLATES[key].label}
                         </SelectItem>
                       ))}
-                      <SelectItem value="custom" className="text-xs">
+                      <SelectItem value="custom" className="text-sm">
                         自定义工作流 (已导入 JSON)
                       </SelectItem>
                     </SelectContent>
@@ -798,7 +798,7 @@ function StudioPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="h-7 px-2 text-xs"
+                      className="min-h-11 px-2 text-sm"
                       onClick={() => comfyFileInputRef.current?.click()}
                     >
                       <FileUpIcon className="size-3.5" />
@@ -808,7 +808,7 @@ function StudioPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="h-7 px-2 text-xs"
+                      className="min-h-11 px-2 text-sm"
                       onClick={() => setShowComfyJsonModal(true)}
                     >
                       <CodeXmlIcon className="size-3.5" />
@@ -818,7 +818,7 @@ function StudioPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="h-7 px-2 text-xs"
+                      className="min-h-11 px-2 text-sm"
                       onClick={() => void handleExportComfyJson()}
                     >
                       <DownloadIcon className="size-3.5" />
@@ -828,7 +828,7 @@ function StudioPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="h-7 px-2 text-xs"
+                      className="min-h-11 px-2 text-sm"
                       onClick={handleCheckComfy}
                       disabled={checkingComfy}
                     >
@@ -842,7 +842,7 @@ function StudioPage() {
                   </div>
                   {comfyCheck && (
                     <div
-                      className={`space-y-1 rounded-xl border px-3 py-2 text-[11px] leading-relaxed ${
+                      className={`space-y-1 rounded-xl border px-3 py-2 text-xs leading-relaxed ${
                         comfyCheck.ok
                           ? 'border-emerald-500/40 bg-emerald-500/8 text-emerald-700 dark:text-emerald-300'
                           : 'border-destructive/40 bg-destructive/10 text-destructive'
@@ -883,12 +883,12 @@ function StudioPage() {
                     value={providerCfg.model}
                     onValueChange={(v) => updateProviderConfig(activeProvider, { model: v })}
                   >
-                    <SelectTrigger className="w-full font-mono text-xs">
+                    <SelectTrigger className="w-full font-mono text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {providerMeta.models.map((m) => (
-                        <SelectItem key={m.value} value={m.value} className="font-mono text-xs">
+                        <SelectItem key={m.value} value={m.value} className="font-mono text-sm">
                           {m.label}
                         </SelectItem>
                       ))}
@@ -904,7 +904,7 @@ function StudioPage() {
                         updateProviderConfig(activeProvider, { customModel: e.target.value })
                       }
                       placeholder="输入模型 ID"
-                      className="bg-background font-mono text-xs"
+                      className="bg-background font-mono text-sm"
                     />
                   </Field>
                 )}
@@ -942,13 +942,13 @@ function StudioPage() {
                     value={apiConfig.comfyuiParams.portraitNodeId}
                     onValueChange={(v) => updateComfyUiParams({ portraitNodeId: v })}
                   >
-                    <SelectTrigger className="w-full text-xs">
+                    <SelectTrigger className="w-full text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">不绑定</SelectItem>
                       {parsedComfyNodes.imageNodes.map((n) => (
-                        <SelectItem key={n.id} value={n.id} className="text-xs">
+                        <SelectItem key={n.id} value={n.id} className="text-sm">
                           #{n.id} {n.title}
                         </SelectItem>
                       ))}
@@ -961,13 +961,13 @@ function StudioPage() {
                     value={apiConfig.comfyuiParams.costumeNodeId}
                     onValueChange={(v) => updateComfyUiParams({ costumeNodeId: v })}
                   >
-                    <SelectTrigger className="w-full text-xs">
+                    <SelectTrigger className="w-full text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">不绑定</SelectItem>
                       {parsedComfyNodes.imageNodes.map((n) => (
-                        <SelectItem key={n.id} value={n.id} className="text-xs">
+                        <SelectItem key={n.id} value={n.id} className="text-sm">
                           #{n.id} {n.title}
                         </SelectItem>
                       ))}
@@ -980,13 +980,13 @@ function StudioPage() {
                     value={apiConfig.comfyuiParams.poseNodeId}
                     onValueChange={(v) => updateComfyUiParams({ poseNodeId: v })}
                   >
-                    <SelectTrigger className="w-full text-xs">
+                    <SelectTrigger className="w-full text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">不绑定</SelectItem>
                       {parsedComfyNodes.imageNodes.map((n) => (
-                        <SelectItem key={n.id} value={n.id} className="text-xs">
+                        <SelectItem key={n.id} value={n.id} className="text-sm">
                           #{n.id} {n.title}
                         </SelectItem>
                       ))}
@@ -999,13 +999,13 @@ function StudioPage() {
                     value={apiConfig.comfyuiParams.promptNodeId}
                     onValueChange={(v) => updateComfyUiParams({ promptNodeId: v })}
                   >
-                    <SelectTrigger className="w-full text-xs">
+                    <SelectTrigger className="w-full text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">保留工作流原提示词</SelectItem>
                       {parsedComfyNodes.promptNodes.map((n) => (
-                        <SelectItem key={n.id} value={n.id} className="text-xs">
+                        <SelectItem key={n.id} value={n.id} className="text-sm">
                           #{n.id} {n.title} ({n.field})
                         </SelectItem>
                       ))}
@@ -1218,7 +1218,7 @@ function StudioPage() {
                         value={apiConfig.qwenParams.negativePrompt}
                         onChange={(e) => updateQwenParams({ negativePrompt: e.target.value })}
                         placeholder="低分辨率，多余手指，扭曲"
-                        className="bg-background text-xs"
+                        className="bg-background text-sm"
                       />
                     </Field>
                   </>
@@ -1293,13 +1293,13 @@ function StudioPage() {
                         value={apiConfig.comfyuiParams.stitchedNodeId}
                         onValueChange={(v) => updateComfyUiParams({ stitchedNodeId: v })}
                       >
-                        <SelectTrigger className="w-full text-xs">
+                        <SelectTrigger className="w-full text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="none">不绑定</SelectItem>
                           {parsedComfyNodes.imageNodes.map((n) => (
-                            <SelectItem key={n.id} value={n.id} className="text-xs">
+                            <SelectItem key={n.id} value={n.id} className="text-sm">
                               #{n.id} {n.title}
                             </SelectItem>
                           ))}
@@ -1315,7 +1315,7 @@ function StudioPage() {
                         onChange={(e) =>
                           updateComfyUiParams({ timeoutSec: Math.max(60, Number(e.target.value) || 600) })
                         }
-                        className="bg-background text-xs"
+                        className="bg-background text-sm"
                       />
                     </Field>
                     <Field label="随机种子 (seed)">
@@ -1455,7 +1455,7 @@ function StudioPage() {
                   <div className="space-y-1">
                     <div className="text-sm font-semibold">正在生成角色图…</div>
                     {generatingModel && (
-                      <Badge variant="secondary" className="font-mono text-[11px]">
+                      <Badge variant="secondary" className="font-mono text-xs">
                         {generatingModel}
                       </Badge>
                     )}
@@ -1493,13 +1493,7 @@ function StudioPage() {
                   )}
                 </div>
               ) : previewUrl ? (
-                <img
-                  src={previewUrl}
-                  alt="生成结果"
-                  onClick={() => {setCardUrl(previewUrl);setCardOpen(true)}}
-                  title="点击放大查看"
-                  className="max-h-[480px] w-auto cursor-zoom-in rounded-xl object-contain transition hover:opacity-95"
-                />
+                <button type="button" aria-label="放大生成结果" onClick={() => setZoomImageUrl(previewUrl)} className="cursor-zoom-in rounded-xl focus-visible:outline-2 focus-visible:outline-ring"><img src={previewUrl} alt="生成结果" className="max-h-[480px] w-auto rounded-xl object-contain transition hover:opacity-95" /></button>
               ) : (
                 <div className="flex flex-col items-center gap-2 text-center text-muted-foreground">
                   <SparklesIcon className="size-7 opacity-35" />
@@ -1529,22 +1523,17 @@ function StudioPage() {
               key={h.id}
               className="group flex flex-col justify-between overflow-hidden rounded-2xl bg-background p-2"
             >
-              <div
-                onClick={() => {
-                  setPreviewUrl(h.imageUrl)
-                  setCardUrl(h.imageUrl)
-                  setCardOpen(true)
-                }}
-                className="relative aspect-3/4 cursor-zoom-in overflow-hidden rounded-xl bg-muted"
-              >
+              <div className="relative aspect-3/4 overflow-hidden rounded-xl bg-muted">
+                <button type="button" aria-label={`查看生成记录：${h.recipeSummary}`} onClick={() => setZoomImageUrl(h.imageUrl)} className="block h-full w-full cursor-zoom-in focus-visible:outline-2 focus-visible:outline-ring">
                 <img
                   src={h.imageUrl}
                   alt={h.recipeSummary}
                   className="h-full w-full object-cover transition group-hover:scale-105"
                 />
-                <span className="absolute bottom-1.5 left-1.5 max-w-[calc(100%-12px)] truncate rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-[10px] text-white">
+                <span className="absolute bottom-1.5 left-1.5 max-w-[calc(100%-12px)] truncate rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-xs text-white">
                   {h.model}
                 </span>
+                </button>
                 <button
                   type="button"
                   onClick={(e) => {
@@ -1568,14 +1557,14 @@ function StudioPage() {
                       setCustomPrompt(h.prompt)
                       toast.success('已恢复该图提示词')
                     }}
-                    className="flex h-7 items-center justify-center rounded-lg bg-muted text-[11px] font-medium whitespace-nowrap text-foreground transition hover:bg-muted/70"
+                    className="flex min-h-11 items-center justify-center rounded-lg bg-muted text-sm font-medium whitespace-nowrap text-foreground transition hover:bg-muted/70"
                   >
                     复用词
                   </button>
                   <a
                     href={h.imageUrl}
                     download={`character-${h.id}.png`}
-                    className="flex h-7 items-center justify-center rounded-lg bg-primary/10 text-[11px] font-medium whitespace-nowrap text-primary transition hover:bg-primary/20"
+                    className="flex min-h-11 items-center justify-center rounded-lg bg-primary/10 text-sm font-medium whitespace-nowrap text-primary transition hover:bg-primary/20"
                   >
                     下载
                   </a>
@@ -1588,36 +1577,13 @@ function StudioPage() {
 
       <CardViewer imageUrl={cardUrl} open={cardOpen} onOpenChange={setCardOpen}/>
       {/* 生成结果全屏放大灯箱 */}
-      <Dialog open={Boolean(zoomImageUrl)} onOpenChange={(o) => !o && setZoomImageUrl(null)}>
-        <DialogContent className="max-h-[92dvh] w-[95vw] max-w-4xl overflow-y-auto p-4 sm:max-w-4xl">
-          <DialogHeader className="flex flex-row flex-wrap items-center justify-between gap-3 pr-8">
-            <div><DialogTitle className="text-base">图片大图预览</DialogTitle><DialogDescription className="sr-only">参考图片或生成结果的放大预览。按 Esc 或关闭按钮返回。</DialogDescription></div>
-            {zoomImageUrl && (
-              <Button size="sm" variant="outline" asChild>
-                <a href={zoomImageUrl} download="image.png">
-                  <DownloadIcon className="size-3.5" />
-                  下载原图
-                </a>
-              </Button>
-            )}
-          </DialogHeader>
-          {zoomImageUrl && (
-            <div className="mt-2 flex items-center justify-center overflow-hidden rounded-xl bg-muted/60 p-2">
-              <img
-                src={zoomImageUrl}
-                alt="大图预览"
-                className="max-h-[78dvh] w-auto rounded-lg object-contain"
-              />
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ImageViewer imageUrl={zoomImageUrl || ''} open={Boolean(zoomImageUrl)} onOpenChange={(open) => !open && setZoomImageUrl(null)} />
 
       {/* 参考拼图独立弹窗（不占用主画布） */}
       <Dialog open={Boolean(stitchModalUrl)} onOpenChange={(o) => !o && setStitchModalUrl(null)}>
         <DialogContent className="max-h-[90dvh] w-[95vw] max-w-3xl overflow-y-auto p-4 sm:max-w-3xl">
           <DialogHeader className="flex flex-row flex-wrap items-center justify-between gap-3 pr-8">
-            <DialogTitle className="text-base">参考图拼合卡片</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">参考图拼合卡片</DialogTitle>
             {stitchModalUrl && (
               <Button size="sm" variant="outline" asChild>
                 <a href={stitchModalUrl} download="reference-sheet.jpg">
@@ -1643,7 +1609,7 @@ function StudioPage() {
       <Dialog open={showComfyJsonModal} onOpenChange={setShowComfyJsonModal}>
         <DialogContent className="max-h-[90dvh] w-[95vw] max-w-3xl overflow-y-auto p-4 sm:max-w-3xl">
           <DialogHeader className="flex flex-row flex-wrap items-center justify-between gap-3 pr-8">
-            <DialogTitle className="text-base">ComfyUI API 工作流 JSON</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">ComfyUI API 工作流 JSON</DialogTitle>
             <Button
               size="sm"
               variant="outline"

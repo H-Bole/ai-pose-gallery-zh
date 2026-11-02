@@ -1,3 +1,4 @@
+import { ZoomViewport } from '@/components/common/ZoomViewport'
 import { TiltSurface } from '@/components/motion/TiltSurface'
 import { FavoriteButton } from '@/components/common/FavoriteButton'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -248,10 +249,10 @@ function CostumesPage() {
                       className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
                     />
                     <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
-                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-[10px] font-bold text-white">
+                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-xs font-bold text-white">
                         {item.id}
                       </span>
-                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900">
+                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-xs font-semibold text-zinc-900">
                         {item.分类}
                       </span>
                     </span>
@@ -259,7 +260,7 @@ function CostumesPage() {
                 </TiltSurface>
                 <div className="mt-2 flex min-h-11 items-center gap-2">
                   <FavoriteButton category="costume" item={item} compact />
-                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-xs" aria-pressed={picked} onClick={() => toggleCostume(item)}>
+                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-sm" aria-pressed={picked} onClick={() => toggleCostume(item)}>
                     {picked ? <CheckIcon className="size-4" /> : <PlusIcon className="size-4" />}
                     {picked ? '已加入' : '加入搭配'}
                   </Button>
@@ -267,17 +268,17 @@ function CostumesPage() {
 
                 <div className="flex flex-1 flex-col justify-between px-1.5 pt-2.5 pb-1">
                   <div>
-                    <div className="line-clamp-2 text-xs leading-snug font-semibold">{item.服装名称}</div>
-                    <div className="mt-1 text-[11px] text-muted-foreground">{item.来源 || 'ギア · 现实服装'}</div>
+                    <div className="line-clamp-2 text-sm leading-snug font-semibold">{item.服装名称}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">{item.来源 || 'ギア · 现实服装'}</div>
                     <div className="mt-1.5 flex flex-wrap gap-1">
                       {(item.标签 || []).slice(0, 5).map((t) => (
-                        <span key={t} className="rounded bg-background px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                        <span key={t} className="rounded bg-background px-1.5 py-0.5 text-xs text-muted-foreground">
                           {t}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <div className="mt-2 truncate font-mono text-[10px] text-muted-foreground">{item.关键词}</div>
+                  <div className="mt-2 truncate font-mono text-xs text-muted-foreground">{item.关键词}</div>
                 </div>
               </div>
             )
@@ -301,15 +302,11 @@ function CostumesPage() {
             return (
               <div className="grid md:grid-cols-[1fr_320px]">
                 <div className="relative flex max-h-[78dvh] min-h-[min(380px,65dvh)] items-center justify-center bg-muted/60 p-4">
-                  <img
-                    src={referenceImageUrl(currentItem.预览图 || currentItem.原图)}
-                    alt={currentItem.服装名称}
-                    className="max-h-[72dvh] w-auto rounded-lg object-contain"
-                  />
+                  <ZoomViewport imageUrl={referenceImageUrl(currentItem.预览图 || currentItem.原图)} alt={currentItem.服装名称} className="h-[65dvh]" />
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full shadow"
+                    aria-label="上一张图片" className="absolute top-1/2 left-3 min-h-11 min-w-11 -translate-y-1/2 rounded-full shadow"
                     onClick={() => setViewerIndex((viewerIndex - 1 + filtered.length) % filtered.length)}
                   >
                     <ChevronLeftIcon className="size-4" />
@@ -317,7 +314,7 @@ function CostumesPage() {
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full shadow"
+                    aria-label="下一张图片" className="absolute top-1/2 right-3 min-h-11 min-w-11 -translate-y-1/2 rounded-full shadow"
                     onClick={() => setViewerIndex((viewerIndex + 1) % filtered.length)}
                   >
                     <ChevronRightIcon className="size-4" />
@@ -331,7 +328,7 @@ function CostumesPage() {
                         <Badge>{currentItem.分类}</Badge>
                         <Badge variant="outline">{currentItem.id}</Badge>
                       </div>
-                      <DialogTitle className="mt-2 text-base leading-snug">{currentItem.服装名称}</DialogTitle>
+                      <DialogTitle className="mt-2 text-lg leading-snug font-semibold">{currentItem.服装名称}</DialogTitle>
                       <p className="text-xs text-muted-foreground">来源：{currentItem.来源 || 'ギア（@giaaibusi）'}</p>
                       {currentItem.source === 'charadb' && <a className="text-xs underline" href={CHARADB_NOTICE_URL} target="_blank" rel="noopener noreferrer">图片仅作参考，禁止真人、未成年人及再分发；查看原作者条件</a>}
                     </DialogHeader>

@@ -1,3 +1,4 @@
+import { ZoomViewport } from '@/components/common/ZoomViewport'
 import { TiltSurface } from '@/components/motion/TiltSurface'
 import { FavoriteButton } from '@/components/common/FavoriteButton'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -302,7 +303,7 @@ function PosesPage() {
                 setShown(60)
               }}
               className={cn(
-                'shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-xs font-medium transition',
+                'shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-sm font-medium transition',
                 angle === a ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
               )}
             >
@@ -347,10 +348,10 @@ function PosesPage() {
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                     />
                     <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
-                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-xs font-bold text-white">
                         {group.number}
                       </span>
-                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900 shadow-xs">
+                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-xs font-semibold text-zinc-900 shadow-xs">
                         {item.角度}
                       </span>
                     </span>
@@ -358,15 +359,15 @@ function PosesPage() {
                 </TiltSurface>
                 <div className="mt-2 flex min-h-11 items-center gap-2">
                   <FavoriteButton category="pose" item={item} compact />
-                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-xs" aria-pressed={picked} onClick={() => togglePose(item)}>
+                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-sm" aria-pressed={picked} onClick={() => togglePose(item)}>
                     {picked ? <CheckIcon className="size-4" /> : <PlusIcon className="size-4" />}
                     {picked ? '已加入' : '加入搭配'}
                   </Button>
                 </div>
 
                 <div className="px-1.5 pt-2.5 pb-1.5">
-                  <div className="line-clamp-2 min-h-[36px] text-xs leading-snug font-semibold">{group.name}</div>
-                  <div className="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
+                  <div className="line-clamp-2 min-h-[36px] text-sm leading-snug font-semibold">{group.name}</div>
+                  <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
                     <span className="truncate">{group.system}</span>
                     <span className="shrink-0 font-medium text-foreground/80">{group.category}</span>
                   </div>
@@ -395,7 +396,7 @@ function PosesPage() {
                           loading="lazy"
                           className="aspect-square w-full rounded-md object-cover"
                         />
-                        <span className="mt-0.5 block text-center text-[9px] text-muted-foreground">{ang}</span>
+                        <span className="mt-0.5 block text-center text-xs text-muted-foreground">{ang}</span>
                       </button>
                     )
                   })}
@@ -429,10 +430,10 @@ function PosesPage() {
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                     />
                     <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
-                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-xs font-bold text-white">
                         {item.姿势编号}
                       </span>
-                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900">
+                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-xs font-semibold text-zinc-900">
                         {item.角度}
                       </span>
                     </span>
@@ -440,14 +441,14 @@ function PosesPage() {
                 </TiltSurface>
                 <div className="mt-2 flex min-h-11 items-center gap-2">
                   <FavoriteButton category="pose" item={item} compact />
-                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-xs" aria-pressed={picked} onClick={() => togglePose(item)}>
+                  <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-sm" aria-pressed={picked} onClick={() => togglePose(item)}>
                     {picked ? <CheckIcon className="size-4" /> : <PlusIcon className="size-4" />}
                     {picked ? '已加入' : '加入搭配'}
                   </Button>
                 </div>
                 <div className="px-1.5 pt-2 pb-1">
-                  <div className="line-clamp-2 text-xs font-semibold">{item.姿势名称}</div>
-                  <div className="mt-1 truncate font-mono text-[10px] text-muted-foreground">{item.id}</div>
+                  <div className="line-clamp-2 text-sm font-semibold">{item.姿势名称}</div>
+                  <div className="mt-1 truncate font-mono text-xs text-muted-foreground">{item.id}</div>
                 </div>
               </div>
             )
@@ -474,13 +475,13 @@ function PosesPage() {
             return (
               <div className="grid md:grid-cols-[1fr_300px]">
                 <div className="relative flex max-h-[78dvh] min-h-[min(360px,65dvh)] items-center justify-center bg-muted/60 p-4">
-                  <img src={`/${activeImgPath}`} alt={it.姿势名称} className="max-h-[72dvh] w-auto rounded-lg object-contain" />
+                  <ZoomViewport imageUrl={`/${activeImgPath}`} alt={it.姿势名称} className="h-[65dvh]" />
                   {grp && grp.order.length > 1 && (
                     <>
                       <Button
                         variant="secondary"
                         size="icon"
-                        className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full shadow"
+                        aria-label="上一张图片" className="absolute top-1/2 left-3 min-h-11 min-w-11 -translate-y-1/2 rounded-full shadow"
                         onClick={() => {
                           const idx = grp.order.findIndex((x) => x.id === it.id)
                           const next = grp.order[(idx - 1 + grp.order.length) % grp.order.length]
@@ -492,7 +493,7 @@ function PosesPage() {
                       <Button
                         variant="secondary"
                         size="icon"
-                        className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full shadow"
+                        aria-label="下一张图片" className="absolute top-1/2 right-3 min-h-11 min-w-11 -translate-y-1/2 rounded-full shadow"
                         onClick={() => {
                           const idx = grp.order.findIndex((x) => x.id === it.id)
                           const next = grp.order[(idx + 1) % grp.order.length]
@@ -516,7 +517,7 @@ function PosesPage() {
                             type="button"
                             onClick={() => setPoseDepthMode(false)}
                             className={cn(
-                              'rounded px-2 py-0.5 text-[11px] font-medium transition',
+                              'rounded px-2 py-0.5 text-sm font-medium transition',
                               !poseDepthMode ? 'bg-background text-foreground shadow-2xs' : 'text-muted-foreground'
                             )}
                           >
@@ -526,7 +527,7 @@ function PosesPage() {
                             type="button"
                             onClick={() => setPoseDepthMode(true)}
                             className={cn(
-                              'rounded px-2 py-0.5 text-[11px] font-medium transition',
+                              'rounded px-2 py-0.5 text-sm font-medium transition',
                               poseDepthMode ? 'bg-primary text-primary-foreground shadow-2xs' : 'text-muted-foreground'
                             )}
                           >
@@ -534,7 +535,7 @@ function PosesPage() {
                           </button>
                         </div>
                       </div>
-                      <DialogTitle className="mt-2 text-lg leading-snug">{it.姿势名称}</DialogTitle>
+                      <DialogTitle className="mt-2 text-lg leading-snug font-semibold">{it.姿势名称}</DialogTitle>
                     </DialogHeader>
 
                     <div className="flex items-center justify-between rounded-lg bg-muted px-2.5 py-1.5 font-mono text-xs">
@@ -569,7 +570,7 @@ function PosesPage() {
                                 )}
                               >
                                 <img src={`/${poseThumbPath(angItem, poseDepthMode)}`} alt={ang} className="aspect-square w-full rounded object-cover" />
-                                <span className="mt-0.5 block text-center text-[10px]">{ang}</span>
+                                <span className="mt-0.5 block text-center text-xs">{ang}</span>
                               </button>
                             )
                           })}
@@ -577,7 +578,7 @@ function PosesPage() {
                       </div>
                     )}
 
-                    <dl className="grid grid-cols-[68px_1fr] gap-y-1.5 text-xs">
+                    <dl className="grid grid-cols-[68px_1fr] gap-y-1.5 text-sm">
                       <dt className="text-muted-foreground">所属体系</dt>
                       <dd className="font-medium">{it.体系}</dd>
                       <dt className="text-muted-foreground">动作分类</dt>
