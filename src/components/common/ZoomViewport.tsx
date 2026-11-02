@@ -106,7 +106,7 @@ function ZoomSurface({ imageUrl, alt = '图片预览', children, contentWidth = 
       onPointerCancel={(e) => { pointers.current.delete(e.pointerId); previous.current = gesture() }}
       onLostPointerCapture={(e) => { pointers.current.delete(e.pointerId); previous.current = gesture() }}>
       <div className="pointer-events-none absolute top-1/2 left-1/2 origin-center select-none" style={{ width: natural.width, height: natural.height, transform: `translate(-50%, -50%) translate(${view.x}px, ${view.y}px) scale(${fit * view.zoom})` }}>
-        {children ?? <img src={imageUrl} alt={alt} draggable={false} className="h-full w-full object-contain" onLoad={(e) => { setNatural({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight }); reset() }} />}
+        {children ?? (imageUrl && <img src={imageUrl} alt={alt} draggable={false} className="h-full w-full object-contain" onLoad={(e) => { setNatural({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight }); reset() }} />)}
       </div>
     </div>
     <p className="shrink-0 text-center text-xs text-muted-foreground">滚轮或双指缩放 · 放大后拖动 · 100% 为适应窗口</p>
