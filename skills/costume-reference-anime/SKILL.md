@@ -5,7 +5,7 @@ description: 检索 CharaDB 公开版440套二次元服装的中文名称、分�
 
 # 二次元服装参考
 
-在 `references/catalog.csv` 中按中文名称、分类、英文关键词或 `charadb-Oxxx` ID 检索。数据从官方固定提交导入，图片不随仓库分发。完整来源说明见仓库根目录 `NOTICE.md`，来源版本见 `data/charadb/source.json`。
+在 `references/catalog.csv` 中按中文名称、分类、英文关键词或 `charadb-Oxxx` ID 检索。数据从官方固定提交导入，图片不随仓库分发。使用条件见 [原作者 LICENSE](https://github.com/taki-ttt/charadb/blob/main/LICENSE)，来源版本见 `data/charadb/source.json`。
 
 1. 默认提供1—3个候选的名称、ID、原始英文标签和来源链接，不随机混入现实服装。
 2. 先告知使用者：CharaDB 图片仅供参考，禁止用于表现真实人物或未成年人，禁止原图或加工图再分发、转载和转售；图片不适用MIT/CC0，无需署名。远程展示及向模型传图未取得额外授权，不能认为热链自动允许。
