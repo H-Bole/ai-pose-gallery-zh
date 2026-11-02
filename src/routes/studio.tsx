@@ -67,7 +67,7 @@ import type {
 } from '@/types/gallery'
 
 export const Route = createFileRoute('/studio')({
-  staticData: { title: 'AI 合成台' },
+  staticData: { title: '创作间' },
   component: StudioPage,
 })
 
@@ -383,7 +383,7 @@ function StudioPage() {
   return (
     <>
       <PageHeader
-        title="AI 角色合成台"
+        title="创作间"
         actions={
           <Button variant="outline" size="sm" asChild>
             <Link to="/settings">

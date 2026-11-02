@@ -35,7 +35,7 @@ export function AppSidebar() {
                 </div>
                 <div className="grid flex-1 text-left leading-tight">
                   <span className="truncate text-sm font-semibold">衣想天开</span>
-                  <span className="truncate text-xs text-muted-foreground">AI 角色参考与合成</span>
+                  <span className="truncate text-xs text-muted-foreground">穿搭灵感与角色创作</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -79,7 +79,7 @@ export function AppSidebar() {
                 <div className="grid flex-1 text-left text-xs leading-tight">
                   <span className="truncate font-semibold">角色配方槽 ({count}/3)</span>
                   <span className="truncate text-[11px] text-muted-foreground">
-                    {count === 0 ? '未选择 · 点击去捏人' : '点击进入 AI 合成台'}
+                    {count === 0 ? '未选择 · 点击去捏人' : '点击进入 创作间'}
                   </span>
                 </div>
               </Link>

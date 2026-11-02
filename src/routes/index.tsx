@@ -20,7 +20,7 @@ import { useStudio } from '@/store/studioStore'
 import { referenceImageUrl } from '@/lib/recipeImages'
 
 export const Route = createFileRoute('/')({
-  staticData: { title: '图库总览' },
+  staticData: { title: '灵感图库' },
   loader: ({ context }) =>
     Promise.all([
       context.queryClient.ensureQueryData(posesQuery),
@@ -42,7 +42,7 @@ function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="衣想天开 · AI 角色参考库" />
+      <PageHeader title="灵感图库" />
 
       {/* 核心数据指标卡片 */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

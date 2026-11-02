@@ -26,8 +26,8 @@ export const navGroups: NavGroup[] = [
   {
     label: '衣想天开',
     items: [
-      { title: '图库总览', to: '/', icon: LayoutDashboardIcon },
-      { title: 'AI 角色合成台', to: '/studio', icon: SparklesIcon, badge: 'PRO' },
+      { title: '灵感图库', to: '/', icon: LayoutDashboardIcon },
+      { title: '创作间', to: '/studio', icon: SparklesIcon },
     ],
   },
   {

@@ -16,7 +16,7 @@ function GuidePage() {
       <Section title="版本与开源归属" className="@lg/section:grid-cols-1">
         <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
           <p>
-            本个人版由 H-Bole 基于 Anhao 中文版二次开发，由 GPT6.1 Sol 协助开发。原有图库素材作者为ギア（@giaaibusi），新增二次元服装作者为たき AI（@taki_auto），素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
+            本个人版由 H-Bole 基于 Anhao 中文版二次开发。原有图库素材作者为ギア（@giaaibusi），新增二次元服装作者为たき AI（@taki_auto），素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
           </p>
           <p className="flex flex-wrap gap-x-4 gap-y-2">
             <a className="underline" href="https://github.com/H-Bole/ai-pose-gallery-zh">个人版源码</a>
