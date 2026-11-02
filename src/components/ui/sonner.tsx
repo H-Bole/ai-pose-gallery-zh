@@ -14,7 +14,7 @@ function Notice({ notice, paused, front, expanded }: { notice: ToastT; paused: b
   }, [paused, duration, notice])
   const action = notice.action && typeof notice.action === 'object' && 'label' in notice.action ? notice.action as Action : null
   const Icon = ({success: CircleCheckIcon, error: OctagonXIcon, warning: TriangleAlertIcon, loading: Loader2Icon} as const)[notice.type as 'success' | 'error' | 'warning' | 'loading'] || InfoIcon
-  return <div className="app-notice" data-kind={notice.type || 'normal'} role={notice.type === 'error' ? 'alert' : 'status'} aria-hidden={!front && !expanded}>
+  return <div className="app-notice" data-kind={notice.type || 'normal'} role={notice.type === 'error' ? 'alert' : 'status'} aria-hidden={!front && !expanded} inert={!front && !expanded}>
     <span className="app-notice-icon" aria-hidden="true">{notice.icon || <Icon className={notice.type === 'loading' ? 'size-4 animate-spin' : 'size-4'} />}</span>
     <div className="app-notice-content">
       <div>{typeof notice.title === 'function' ? notice.title() : notice.title}</div>
