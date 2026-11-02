@@ -8,7 +8,7 @@ import { routeTree } from './routeTree.gen'
 import './index.css'
 
 // 仅个人生产站启用统计，避免本地预览和其他 fork 污染数据。
-if (import.meta.env.PROD && window.location.hostname === 'h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev') {
+if (import.meta.env.PROD && window.location.hostname === 'pose.boledev.dpdns.org') {
   const beacon = document.createElement('script')
   beacon.type = 'module'
   beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js'

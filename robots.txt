@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev/sitemap.xml
+Sitemap: https://pose.boledev.dpdns.org/sitemap.xml

@@ -2,7 +2,7 @@
 
 本版本由 **H-Bole 基于 Anhao 中文版二次开发**，由 **GPT6.1 Sol 协助开发**。
 
-**个人在线版：** [图库首页](https://h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev/) · [角色合成台](https://h-bole-ai-pose-gallery.ai-pose-gallery-zh.workers.dev/studio)
+**个人在线版：** [图库首页](https://pose.boledev.dpdns.org/) · [角色合成台](https://pose.boledev.dpdns.org/studio)
 **个人仓库：** [H-Bole/ai-pose-gallery-zh](https://github.com/H-Bole/ai-pose-gallery-zh)
 
 > **姿势库（1,439 张素体白模 + 1,439 张深度图 Depth） + 服装库（现实 1,407 套 + 二次元 440 套） + 人像库（1,499 位） = 4,785 条全中文参考数据 / 11,568 张本地高清图，另有 440 张来源站点参考图**，集成 **5 大 AI 图像协议直连工作台** 与 **原生 ComfyUI 自定义节点插件（`custom_nodes`）**。
@@ -209,7 +209,7 @@ python3 scripts/verify.py
 
 ### 本 fork 的部署
 
-本 fork 使用独立 Worker `h-bole-ai-pose-gallery`，生产来源为 `H-Bole/ai-pose-gallery-zh` 的 `main`。作者仓库的 PR 不承担个人部署配置。
+本 fork 使用独立 Worker `h-bole-ai-pose-gallery`，生产来源为 `H-Bole/ai-pose-gallery-zh` 的 `main`。作者仓库的 PR 不承担个人部署配置。自定义域名 `pose.boledev.dpdns.org` 已在 `wrangler.jsonc` 中声明，后续自动部署会保留绑定；原 workers.dev 地址继续可用。
 
 Node.js 24、pnpm 11.22.0 和 Wrangler 4.156.0 已在仓库中指定。`pnpm run build` 包含前端与完整图库素材，`pnpm run deploy` 可以完成构建和部署。请完整检出仓库，稀疏检出可能缺少图片。
 
