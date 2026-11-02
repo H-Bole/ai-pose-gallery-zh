@@ -7,7 +7,7 @@ export function Section({ title, desc, actions, children, className }: { title: 
     <section className="@container/section min-w-0 rounded-[22px] bg-muted p-4 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 [overflow-wrap:anywhere]">
-          <h2 className="text-base font-semibold">{title}</h2>
+          <h2 className="text-lg font-semibold">{title}</h2>
           {desc && <p className="mt-1 text-sm text-muted-foreground">{desc}</p>}
         </div>
         {actions && <div className="flex max-w-full flex-wrap items-center gap-1.5 [&>div]:flex-wrap">{actions}</div>}

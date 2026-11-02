@@ -100,7 +100,7 @@ function SettingsPage() {
                   : 'border-border/60 bg-card hover:bg-muted/40'
               }`}
             >
-              <span className="truncate text-xs sm:text-sm">{itemMeta.name}</span>
+              <span className="truncate text-sm">{itemMeta.name}</span>
               <span
                 className={`size-2 shrink-0 rounded-full ${
                   hasKey ? 'bg-emerald-500' : 'bg-muted-foreground/30'
@@ -197,12 +197,12 @@ function SettingsPage() {
               value={pCfg.model}
               onValueChange={(v) => updateProviderConfig(pid, { model: v })}
             >
-              <SelectTrigger className="w-full font-mono text-xs">
+              <SelectTrigger className="w-full font-mono text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {meta.models.map((m) => (
-                  <SelectItem key={m.value} value={m.value} className="font-mono text-xs">
+                  <SelectItem key={m.value} value={m.value} className="font-mono text-sm">
                     {m.label}
                   </SelectItem>
                 ))}
@@ -217,7 +217,7 @@ function SettingsPage() {
               value={pCfg.customModel}
               onChange={(e) => updateProviderConfig(pid, { customModel: e.target.value })}
               placeholder={pid === 'doubao' ? 'ep-2026xxxx 或模型 ID' : '输入模型 ID'}
-              className="font-mono text-xs"
+              className="font-mono text-sm"
             />
           </Field>
         )}

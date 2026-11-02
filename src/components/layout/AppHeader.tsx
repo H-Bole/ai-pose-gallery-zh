@@ -89,7 +89,7 @@ export function AppHeader() {
             <SparklesIcon className="size-3.5" />
             <span className="hidden @lg/header:inline">创作间</span>
             {selectedCount > 0 && (
-              <span className="ml-1 rounded-full bg-primary-foreground/20 px-1.5 py-0.2 text-[11px] font-bold">
+              <span className="ml-1 rounded-full bg-primary-foreground/20 px-1.5 py-0.2 text-xs font-bold">
                 {selectedCount}/3
               </span>
             )}

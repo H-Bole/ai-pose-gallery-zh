@@ -70,8 +70,8 @@ export function renderCard(canvas: HTMLCanvasElement, image: HTMLImageElement, p
     ctx.fillStyle = pale
     ctx.textBaseline = 'alphabetic'
     const text = (value: string, size: number, yy: number, max: number, weight = '500') => {
-      ctx.font = `${weight} ${size}px Inter, "Microsoft YaHei", sans-serif`
-      while (ctx.measureText(value).width > max && size > u * .014) { size -= 1; ctx.font = `${weight} ${size}px Inter, "Microsoft YaHei", sans-serif` }
+      ctx.font = `${weight} ${size}px "Inter Variable", "PingFang SC", "Microsoft YaHei", sans-serif`
+      while (ctx.measureText(value).width > max && size > u * .014) { size -= 1; ctx.font = `${weight} ${size}px "Inter Variable", "PingFang SC", "Microsoft YaHei", sans-serif` }
       if (p.finish === 'emboss') { ctx.shadowColor = '#000'; ctx.shadowBlur = u * .002; ctx.shadowOffsetY = u * .002 }
       ctx.fillText(value, tx, yy, max)
       ctx.shadowBlur = 0; ctx.shadowOffsetY = 0
@@ -80,7 +80,7 @@ export function renderCard(canvas: HTMLCanvasElement, image: HTMLImageElement, p
     ctx.fillStyle = gold
     text(p.subtitle, u * .024, baseline + u * .043, w - tx * 2)
     if (p.number) {
-      ctx.textAlign = 'right'; ctx.font = `500 ${u * .025}px Inter, sans-serif`
+      ctx.textAlign = 'right'; ctx.font = `500 ${u * .025}px "Inter Variable", "PingFang SC", "Microsoft YaHei", sans-serif`
       ctx.fillText(p.number, w - tx, original ? u * .065 : m + u * .047, w * .45)
       ctx.textAlign = 'left'
     }

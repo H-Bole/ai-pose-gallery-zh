@@ -14,7 +14,7 @@ function GuidePage() {
       <PageHeader title="使用指南与免责声明" />
 
       <Section title="版本与开源归属" className="@lg/section:grid-cols-1">
-        <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
+        <div className="space-y-2.5 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
           <p>
             本个人版由 H-Bole 基于 Anhao 中文版二次开发。原有图库素材作者为ギア（@giaaibusi），新增二次元服装作者为たき AI（@taki_auto），素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
           </p>
@@ -30,31 +30,31 @@ function GuidePage() {
       <Section title="角色合成流程" className="@lg/section:grid-cols-3">
         <div className="rounded-2xl bg-background p-4">
           <Badge>1. 人像</Badge>
-          <h3 className="mt-2 text-sm font-semibold">人像颜值库 (1,499)</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <h3 className="mt-2 text-lg font-semibold">人像颜值库 (1,499)</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
             挑选五官与发型参考，或在合成台直接上传自定义人像图，锁定角色面部特征。
           </p>
         </div>
 
         <div className="rounded-2xl bg-background p-4">
           <Badge>2. 服装</Badge>
-          <h3 className="mt-2 text-sm font-semibold">服装穿搭库 (1,847)</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <h3 className="mt-2 text-lg font-semibold">服装穿搭库 (1,847)</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
             按全部 / 现实 / 二次元及分类、标签挑选；现实服装 1,407 套，CharaDB 二次元服装 440 套。二次元图片需联网并遵守独立来源条件。
           </p>
         </div>
 
         <div className="rounded-2xl bg-background p-4">
           <Badge>3. 姿势 + 附图</Badge>
-          <h3 className="mt-2 text-sm font-semibold">动作姿势库 (1,439)</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <h3 className="mt-2 text-lg font-semibold">动作姿势库 (1,439)</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
             挑选 5 视角 3D 素体白模或深度图（Depth），结合云端 API 或本地 ComfyUI 一键生成角色立绘。
           </p>
         </div>
       </Section>
 
       <Section title="免责声明与合规使用规范（必读）" className="@lg/section:grid-cols-1">
-        <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
+        <div className="space-y-2.5 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
           <p>
             <strong className="text-foreground">1. 仅供学习与合法艺术创作（严禁违法）：</strong>
             本项目（含网页工作台、本地 ComfyUI 插件与工作流模板）
@@ -75,13 +75,13 @@ function GuidePage() {
       </Section>
 
       <Section title="访问统计与隐私" className="@lg/section:grid-cols-1">
-        <div className="rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
+        <div className="rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
           Cloudflare Web Analytics 仅用于访问量与页面性能统计，支持 SPA 页面切换，未添加自定义事件。统计不会发送 API Key、提示词、上传参考图或生成内容；生图请求由使用者配置的服务处理，生成历史保存在本机浏览器中。
         </div>
       </Section>
 
       <Section title="数据来源与版权说明" className="@lg/section:grid-cols-1">
-        <div className="space-y-2.5 rounded-2xl bg-background p-4 text-xs leading-relaxed text-muted-foreground">
+        <div className="space-y-2.5 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
           <p>
             <strong className="text-foreground">• 原作者版权归属：</strong>
             本仓库原有姿势（<code>ai-pose-gallery.pages.dev</code>、<code>ai-pose-depth-gallery.pages.dev</code>）、现实服装（<code>ai-costume-gallery.pages.dev</code>）、人像（<code>ai-portrait-gallery.pages.dev</code>）参考图与原始元数据源自原作者{' '}

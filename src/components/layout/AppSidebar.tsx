@@ -55,7 +55,7 @@ export function AppSidebar() {
                       <item.icon />
                       <span className="flex-1 truncate">{item.title}</span>
                       {item.badge && (
-                        <Badge variant="secondary" className="ml-auto h-5 px-1.5 text-[10px] font-medium">
+                        <Badge variant="secondary" className="ml-auto h-5 px-1.5 text-xs font-medium">
                           {item.badge}
                         </Badge>
                       )}
@@ -78,7 +78,7 @@ export function AppSidebar() {
                 </div>
                 <div className="grid flex-1 text-left text-xs leading-tight">
                   <span className="truncate font-semibold">当前搭配 ({count}/3)</span>
-                  <span className="truncate text-[11px] text-muted-foreground">
+                  <span className="truncate text-xs text-muted-foreground">
                     {count === 0 ? '未选择 · 打开创作间' : '点击进入创作间'}
                   </span>
                 </div>

@@ -56,7 +56,7 @@ export function RecipeDock() {
                   className="h-8 w-7 shrink-0 rounded-md object-cover sm:h-10 sm:w-8"
                 />
                 <div className="min-w-0 max-w-full flex-1">
-                  <div className="truncate text-[11px] font-medium sm:text-xs">{recipe.portrait.发型名称}</div>
+                  <div className="truncate text-xs font-medium">{recipe.portrait.发型名称}</div>
                 </div>
                 <button
                   type="button"
@@ -72,7 +72,7 @@ export function RecipeDock() {
                 <div className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md bg-background/80 sm:h-10 sm:w-8">
                   <UserRoundIcon className="size-3.5" />
                 </div>
-                <span className="truncate text-[11px] sm:text-xs">人像</span>
+                <span className="truncate text-xs">人像</span>
               </Link>
             )}
           </div>
@@ -87,7 +87,7 @@ export function RecipeDock() {
                   className="h-8 w-7 shrink-0 rounded-md object-cover sm:h-10 sm:w-8"
                 />
                 <div className="min-w-0 max-w-full flex-1">
-                  <div className="truncate text-[11px] font-medium sm:text-xs">{recipe.costume.服装名称}</div>
+                  <div className="truncate text-xs font-medium">{recipe.costume.服装名称}</div>
                 </div>
                 <button
                   type="button"
@@ -103,7 +103,7 @@ export function RecipeDock() {
                 <div className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md bg-background/80 sm:h-10 sm:w-8">
                   <ShirtIcon className="size-3.5" />
                 </div>
-                <span className="truncate text-[11px] sm:text-xs">服装</span>
+                <span className="truncate text-xs">服装</span>
               </Link>
             )}
           </div>
@@ -118,12 +118,12 @@ export function RecipeDock() {
                   className="h-8 w-7 shrink-0 rounded-md object-cover sm:h-10 sm:w-8"
                 />
                 <div className="min-w-0 max-w-full flex-1">
-                  <div className="truncate text-[11px] font-medium sm:text-xs" title={recipe.pose.姿势名称}>{recipe.pose.姿势名称}</div>
+                  <div className="truncate text-xs font-medium" title={recipe.pose.姿势名称}>{recipe.pose.姿势名称}</div>
                   {recipe.pose.source !== 'upload' && (
                     <button
                       type="button"
                       onClick={toggleRecipePoseDepth}
-                      className="mt-0.5 inline-flex items-center gap-1 rounded bg-background/80 px-1 py-0.5 text-[10px] leading-none text-muted-foreground hover:text-foreground"
+                      className="mt-0.5 inline-flex items-center gap-1 rounded bg-background/80 px-1 py-0.5 text-xs leading-none text-muted-foreground hover:text-foreground"
                     >
                       <span className={!recipe.pose.useDepth ? 'font-semibold text-foreground' : ''}>白模</span>
                       <span>/</span>
@@ -145,7 +145,7 @@ export function RecipeDock() {
                 <div className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md bg-background/80 sm:h-10 sm:w-8">
                   <PersonStandingIcon className="size-3.5" />
                 </div>
-                <span className="truncate text-[11px] sm:text-xs">姿势</span>
+                <span className="truncate text-xs">姿势</span>
               </Link>
             )}
           </div>

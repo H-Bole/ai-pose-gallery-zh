@@ -79,7 +79,7 @@ function DashboardPage() {
           className="group flex flex-col justify-between rounded-[20px] bg-muted p-4 transition hover:bg-muted/70"
         >
           <div className="flex items-center justify-between">
-            <h2 className="flex items-center gap-1.5 text-base font-semibold"><PersonStandingIcon aria-hidden="true" className="size-4" />动作姿势库</h2>
+            <h2 className="flex items-center gap-1.5 text-lg font-semibold"><PersonStandingIcon aria-hidden="true" className="size-4" />动作姿势库</h2>
             <Badge variant="secondary">1,439</Badge>
           </div>
           <div className="mt-3 grid grid-cols-4 gap-1.5">
@@ -100,7 +100,7 @@ function DashboardPage() {
           className="group flex flex-col justify-between rounded-[20px] bg-muted p-4 transition hover:bg-muted/70"
         >
           <div className="flex items-center justify-between">
-            <h2 className="flex items-center gap-1.5 text-base font-semibold"><ShirtIcon aria-hidden="true" className="size-4" />服装穿搭库</h2>
+            <h2 className="flex items-center gap-1.5 text-lg font-semibold"><ShirtIcon aria-hidden="true" className="size-4" />服装穿搭库</h2>
             <Badge variant="secondary">{costumes.length.toLocaleString('zh-CN')}</Badge>
           </div>
           <div className="mt-3 grid grid-cols-4 gap-1.5">
@@ -121,7 +121,7 @@ function DashboardPage() {
           className="group flex flex-col justify-between rounded-[20px] bg-muted p-4 transition hover:bg-muted/70"
         >
           <div className="flex items-center justify-between">
-            <h2 className="flex items-center gap-1.5 text-base font-semibold"><UserRoundIcon aria-hidden="true" className="size-4" />人像颜值库</h2>
+            <h2 className="flex items-center gap-1.5 text-lg font-semibold"><UserRoundIcon aria-hidden="true" className="size-4" />人像颜值库</h2>
             <Badge variant="secondary">1,499</Badge>
           </div>
           <div className="mt-3 grid grid-cols-4 gap-1.5">
@@ -141,7 +141,7 @@ function DashboardPage() {
       {/* 热门人像 Top10 速选区 */}
       <section className="rounded-[20px] bg-muted p-4">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="flex items-center gap-1.5 text-sm font-semibold sm:text-base">
+          <h2 className="flex items-center gap-1.5 text-lg font-semibold">
             <FlameIcon className="size-4 text-orange-500" />
             热门人像 Top 10
           </h2>
@@ -169,7 +169,7 @@ function DashboardPage() {
                     loading="lazy"
                     className="h-full w-full object-cover transition group-hover:scale-105"
                   />
-                  <span className="absolute top-1.5 left-1.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                  <span className="absolute top-1.5 left-1.5 rounded-md bg-black/70 px-1.5 py-0.5 text-xs font-bold text-white">
                     #{idx + 1}
                   </span>
                   <span
@@ -181,7 +181,7 @@ function DashboardPage() {
                   </span>
                 </div>
                 <div className="p-1.5">
-                  <div className="truncate text-[11px] font-medium">{item.发型名称}</div>
+                  <div className="truncate text-xs font-medium">{item.发型名称}</div>
                 </div>
               </div>
             )
