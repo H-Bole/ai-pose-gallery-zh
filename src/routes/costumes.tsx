@@ -1,3 +1,4 @@
+import { TiltSurface } from '@/components/motion/TiltSurface'
 import { FavoriteButton } from '@/components/common/FavoriteButton'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
@@ -230,29 +231,32 @@ function CostumesPage() {
             return (
               <div
                 key={item.id}
-                className="group flex flex-col overflow-hidden rounded-[20px] bg-muted p-2 transition hover:-translate-y-0.5 hover:shadow-md"
+                data-state={picked ? 'selected' : 'idle'}
+                className="gallery-card group flex flex-col overflow-hidden rounded-[20px] bg-muted p-2 transition hover:shadow-md"
               >
-                <button
-                  type="button"
-                  aria-label={`查看 ${item.id} 大图`}
-                  onClick={() => setViewerIndex(idx)}
-                  className="relative block w-full shrink-0 aspect-2/3 cursor-zoom-in overflow-hidden rounded-2xl bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                >
-                  <img
-                    src={referenceImageUrl(item.缩略图)}
-                    alt={item.服装名称}
-                    loading="lazy"
-                    className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
-                  />
-                  <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
-                    <span className="rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-[10px] font-bold text-white">
-                      {item.id}
+                <TiltSurface className="gallery-image-tilt shrink-0 rounded-2xl">
+                  <button
+                    type="button"
+                    aria-label={`查看 ${item.id} 大图`}
+                    onClick={() => setViewerIndex(idx)}
+                    className="relative block w-full shrink-0 aspect-2/3 cursor-zoom-in overflow-hidden rounded-2xl bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  >
+                    <img
+                      src={referenceImageUrl(item.缩略图)}
+                      alt={item.服装名称}
+                      loading="lazy"
+                      className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
+                    />
+                    <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
+                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-[10px] font-bold text-white">
+                        {item.id}
+                      </span>
+                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900">
+                        {item.分类}
+                      </span>
                     </span>
-                    <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900">
-                      {item.分类}
-                    </span>
-                  </span>
-                </button>
+                  </button>
+                </TiltSurface>
                 <div className="mt-2 flex min-h-11 items-center gap-2">
                   <FavoriteButton category="costume" item={item} compact />
                   <Button type="button" variant={picked ? 'secondary' : 'default'} className="min-h-11 min-w-0 flex-1 px-2 text-xs" aria-pressed={picked} onClick={() => toggleCostume(item)}>

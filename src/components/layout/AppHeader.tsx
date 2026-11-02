@@ -3,6 +3,7 @@ import { DicesIcon, ShieldCheckIcon, SparklesIcon } from 'lucide-react'
 import { Fragment } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { costumesQuery, portraitsQuery, posesQuery } from '@/api/gallery'
+import { MotionToggle } from '@/components/motion/MotionProvider'
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
 import {
   Breadcrumb,
@@ -94,6 +95,7 @@ export function AppHeader() {
             )}
           </Link>
         </Button>
+        <MotionToggle className="header-motion-toggle" />
         <ThemeToggle />
       </div>
     </header>

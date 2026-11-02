@@ -1,3 +1,4 @@
+import { RevealSurface } from '@/components/motion/RevealSurface'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, useLocation } from '@tanstack/react-router'
 import { CopyIcon, DicesIcon, LoaderCircleIcon, PersonStandingIcon, ShirtIcon, SparklesIcon, Trash2Icon, UserRoundIcon, XIcon } from 'lucide-react'
@@ -11,14 +12,14 @@ import { useStudio } from '@/store/studioStore'
 
 export function RecipeDock() {
   const { pathname } = useLocation()
-  const { recipe, apiConfig, isGenerating, setPortrait, setCostume, setPose, toggleRecipePoseDepth, clearRecipe, randomizeRecipe } = useStudio()
+  const { recipeReveal, recipe, apiConfig, isGenerating, setPortrait, setCostume, setPose, toggleRecipePoseDepth, clearRecipe, randomizeRecipe } = useStudio()
   const qc = useQueryClient()
   const extraCount = (recipe.extraImages || []).length
   const workflowImages = apiConfig.activeProvider === 'comfyui' && recipe.workflowImagesIdentity === workflowIdentity(apiConfig.comfyuiParams.workflowJson) ? Object.values(recipe.workflowImages || {}) : []
   const count = [recipe.portrait, recipe.costume, recipe.pose].filter(Boolean).length + extraCount + workflowImages.length
 
   // 在合成台、设置页、指南页隐藏底部悬浮栏，避免与页面内组件重复
-  if (pathname.startsWith('/studio') || pathname.startsWith('/settings') || pathname.startsWith('/guide')) {
+  if (pathname.startsWith('/studio') || pathname.startsWith('/settings') || pathname.startsWith('/guide') || pathname.startsWith('/library')) {
     return null
   }
 
@@ -43,7 +44,7 @@ export function RecipeDock() {
 
   return (
     <div className="sticky bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 mx-auto mt-4 w-full max-w-5xl [@media(max-height:30rem)]:static">
-      <div className="flex flex-col gap-2 rounded-2xl border border-border/80 bg-card/95 p-2 shadow-lg backdrop-blur-md @3xl/main:flex-row @3xl/main:items-center @3xl/main:justify-between sm:px-3.5 sm:py-2.5">
+      <RevealSurface eventKey={recipeReveal} className="flex flex-col gap-2 rounded-2xl border border-border/80 bg-card/95 p-2 shadow-lg backdrop-blur-md @3xl/main:flex-row @3xl/main:items-center @3xl/main:justify-between sm:px-3.5 sm:py-2.5">
         <div className="grid min-w-0 max-w-full flex-1 grid-cols-3 gap-1.5 sm:gap-2">
           {/* Slot 1: Portrait */}
           <div className="relative flex min-w-0 flex-col items-start gap-1.5 rounded-xl bg-muted/80 p-1.5 @md/main:flex-row @md/main:items-center sm:gap-2 sm:p-2">
@@ -182,7 +183,7 @@ export function RecipeDock() {
             </Link>
           </Button>
         </div>
-      </div>
+      </RevealSurface>
     </div>
   )
 }

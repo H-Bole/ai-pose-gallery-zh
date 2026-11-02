@@ -1,0 +1,16 @@
+.gallery-card[data-state='selected'] {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.gallery-image-tilt:focus-within {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-card,
+  .gallery-card img {
+    transition: none;
+  }
+}

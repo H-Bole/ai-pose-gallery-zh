@@ -196,6 +196,8 @@ function mergeStoredConfig(raw: unknown): ApiConfig {
 
 interface StudioContextValue extends ReturnType<typeof useCreativeLibrary> {
   hydrated: boolean
+  recipeReveal: number
+  generationReveal: number
   activeTask: ActiveTask | null
   resumeGeneration: () => Promise<void>
   stopTracking: () => Promise<void>
@@ -303,6 +305,8 @@ export function StudioProvider({ children }: { children: ReactNode }) {
       return ''
     }
   })
+  const [recipeReveal, setRecipeReveal] = useState(0)
+  const [generationReveal, setGenerationReveal] = useState(0)
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatingModel, setGeneratingModel] = useState('')
   const [generationProgress, setGenerationProgress] = useState<GenerationProgress | null>(null)
@@ -506,18 +510,11 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     const costumePool = (pools.costumes || []).filter((c) => c.source !== 'charadb' && (!safeMode || !isNsfwCostume(c)))
     const portraitPool = pools.portraits || []
 
-    setRecipe((prev) => ({
-      ...prev,
-      portrait: portraitPool.length
-        ? portraitPool[Math.floor(Math.random() * portraitPool.length)]
-        : prev.portrait,
-      costume: costumePool.length
-        ? costumePool[Math.floor(Math.random() * costumePool.length)]
-        : prev.costume,
-      pose: posePool.length
-        ? { ...posePool[Math.floor(Math.random() * posePool.length)], useDepth: poseDepthMode }
-        : prev.pose,
-    }))
+    const portrait = portraitPool.length ? portraitPool[Math.floor(Math.random() * portraitPool.length)] : undefined
+    const costume = costumePool.length ? costumePool[Math.floor(Math.random() * costumePool.length)] : undefined
+    const pose = posePool.length ? {...posePool[Math.floor(Math.random() * posePool.length)], useDepth: poseDepthMode} : undefined
+    setRecipe((prev) => ({...prev, portrait: portrait ?? prev.portrait, costume: costume ?? prev.costume, pose: pose ?? prev.pose}))
+    setRecipeReveal((value) => value + 1)
     toast.success(safeMode ? '已随机抽取一套角色配方（安全模式）' : '已随机抽取一套角色配方')
   }
 
@@ -599,7 +596,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     activeTaskRef.current = value
     setActiveTask(value)
   }
-  const completeGeneration = async (result: {imageUrl: string; modelUsed: string; providerUsed: ImageProviderId}, record: ActiveTask, signal: AbortSignal) => {
+  const completeGeneration = async (result: {imageUrl: string; modelUsed: string; providerUsed: ImageProviderId}, record: ActiveTask, signal: AbortSignal, celebrate = false) => {
     signal.throwIfAborted()
     const imageUrl = await durableImage(result.imageUrl)
     signal.throwIfAborted()
@@ -611,6 +608,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     })
     signal.throwIfAborted()
     await saveActive(null)
+    if (celebrate) setGenerationReveal((value) => value + 1)
     toast.success('角色图已完成并保存')
   }
   const resumeGeneration = async () => {
@@ -683,7 +681,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
         },
       })
       controller.signal.throwIfAborted()
-      await completeGeneration(result, record, controller.signal)
+      await completeGeneration(result, record, controller.signal, true)
     } catch (e) {
       if (e instanceof ComfySubmissionRejectedError || (e instanceof ComfyTaskError && e.reason === 'failed')) {
         try { await saveActive(null) } catch { toast.error('任务失败记录未能清除，请停止跟踪后重试') }
@@ -697,7 +695,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   return (
     <StudioContext.Provider
       value={{
-        ...library, hydrated: idbHydrated,
+        ...library, hydrated: idbHydrated, recipeReveal, generationReveal,
         activeTask, resumeGeneration, stopTracking,
         recipe,
         apiConfig,

@@ -7,6 +7,9 @@ import { StudioProvider } from '@/store/studioStore'
 import { routeTree } from './routeTree.gen'
 import './index.css'
 import './notifications.css'
+import './card-effects.css'
+import './gallery-feedback.css'
+import { MotionProvider } from '@/components/motion/MotionProvider'
 
 // 仅个人生产站启用统计，避免本地预览和其他 fork 污染数据。
 if (import.meta.env.PROD && window.location.hostname === 'pose.boledev.dpdns.org') {
@@ -48,9 +51,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <StudioProvider>
+        <MotionProvider><StudioProvider>
           <RouterProvider router={router} />
-        </StudioProvider>
+        </StudioProvider></MotionProvider>
       </QueryClientProvider>
     </ThemeProvider>
   </StrictMode>
