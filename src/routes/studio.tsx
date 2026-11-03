@@ -2,6 +2,7 @@ import { RevealSurface } from '@/components/motion/RevealSurface'
 import { ImageViewer } from '@/components/common/ImageViewer'
 import { CardViewer } from '@/components/cards/CardViewer'
 import { SaveCreationButton } from '@/components/studio/SaveCreationButton'
+import { ReferenceComparisonDialog } from '@/components/common/ReferenceComparisonDialog'
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
@@ -65,6 +66,7 @@ import type {
   ComfyUiParams,
   DoubaoParams,
   GeminiParams,
+  GenerationHistoryItem,
   GptParams,
   ImagePassMode,
   ImageProviderId,
@@ -114,6 +116,7 @@ function StudioPage() {
   } = useStudio()
   const [cardUrl, setCardUrl] = useState('')
   const [cardOpen, setCardOpen] = useState(false)
+  const [comparisonResult, setComparisonResult] = useState<GenerationHistoryItem | null>(null)
   const previewResult = history.find((item) => item.imageUrl === previewUrl)
   const qc = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -1474,6 +1477,7 @@ function StudioPage() {
           >
             {previewUrl && !isGenerating && <div className="flex flex-wrap gap-2">
               {previewResult && <SaveCreationButton result={previewResult} />}
+              {previewResult && <Button className="min-h-11" variant="outline" onClick={() => setComparisonResult(previewResult)}>对比参考</Button>}
               <Button className="min-h-11" variant="outline" onClick={() => {setCardUrl(previewUrl);setCardOpen(true)}}>制卡与分享</Button>
               <Button className="min-h-11" variant="outline" onClick={() => void setResultAsPortrait(previewUrl)}>继续创作</Button>
             </div>}
@@ -1581,7 +1585,7 @@ function StudioPage() {
 
               <div className="mt-2 space-y-1.5 px-0.5">
                 <div className="truncate text-xs font-medium">{h.recipeSummary}</div>
-                <div className="grid gap-2"><SaveCreationButton result={h}/><Button variant="outline" className="min-h-11" onClick={() => {setCardUrl(h.imageUrl);setCardOpen(true)}}>制卡与分享</Button><Button variant="outline" className="min-h-11" onClick={() => void setResultAsPortrait(h.imageUrl)}>继续创作</Button></div>
+                <div className="grid gap-2"><SaveCreationButton result={h}/><Button variant="outline" className="min-h-11" onClick={() => setComparisonResult(h)}>对比参考</Button><Button variant="outline" className="min-h-11" onClick={() => {setCardUrl(h.imageUrl);setCardOpen(true)}}>制卡与分享</Button><Button variant="outline" className="min-h-11" onClick={() => void setResultAsPortrait(h.imageUrl)}>继续创作</Button></div>
                 <div className="grid grid-cols-2 gap-1.5">
                   <button
                     type="button"
@@ -1608,6 +1612,7 @@ function StudioPage() {
       )}
 
       <CardViewer imageUrl={cardUrl} open={cardOpen} onOpenChange={setCardOpen}/>
+      <ReferenceComparisonDialog result={comparisonResult} open={comparisonResult !== null} onOpenChange={(open) => !open && setComparisonResult(null)} />
       {/* 生成结果全屏放大灯箱 */}
       <ImageViewer imageUrl={zoomImageUrl || ''} open={Boolean(zoomImageUrl)} onOpenChange={(open) => !open && setZoomImageUrl(null)} />
 

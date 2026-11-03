@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { PageHeader } from '@/components/common/PageHeader'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ImageViewer } from '@/components/common/ImageViewer'
+import { ReferenceComparisonDialog } from '@/components/common/ReferenceComparisonDialog'
 import { CardViewer } from '@/components/cards/CardViewer'
 import { TiltSurface } from '@/components/motion/TiltSurface'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
@@ -32,6 +33,7 @@ function LibraryPage() {
   const [viewed, setViewed] = useState<SavedCreation | null>(null)
   const [viewerOpen, setViewerOpen] = useState(false)
   const [cardOpen, setCardOpen] = useState(false)
+  const [comparisonOpen, setComparisonOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [rename, setRename] = useState<{id:string;name:string;legacy?:boolean}|null>(null)
   const [remove, setRemove] = useState<{id:string;legacy?:boolean}|null>(null)
@@ -51,6 +53,7 @@ function LibraryPage() {
         <div className="mt-auto grid grid-cols-2 gap-2">
           <Button variant="outline" className="min-h-11" onClick={()=>{setViewed(item);setCardOpen(true)}}>制卡与分享</Button>
           <Button variant="outline" className="min-h-11" onClick={()=>void setResultAsPortrait(item.result.imageUrl)}>继续创作</Button>
+          <Button variant="outline" className="col-span-2 min-h-11" onClick={()=>{setViewed(item);setComparisonOpen(true)}}>对比参考</Button>
           {item.result.snapshot && <Button variant="outline" className="col-span-2 min-h-11" onClick={()=>setLoad({id:item.id})}>载入生成配方</Button>}
           <Button variant="ghost" className="min-h-11" onClick={()=>setRename({id:item.id,name:item.name})}>改名</Button>
           <Button variant="ghost" className="min-h-11" onClick={()=>setRemove({id:item.id})}>删除</Button>
@@ -58,6 +61,7 @@ function LibraryPage() {
       </article>)}</div>}
     {outfits.length>0 && <section className="space-y-3 rounded-2xl border p-4"><h2 className="text-lg font-semibold">已有搭配（{outfits.length}）</h2><p className="text-xs text-muted-foreground">这些是旧版保存的参考与参数，没有绑定成品；记录仍可使用。</p>{outfits.map((item)=><div key={item.id} className="flex flex-wrap items-center gap-2 rounded-xl bg-muted p-3"><span className="min-w-0 flex-1 break-words text-sm">{item.name}</span><Button variant="outline" className="min-h-11" onClick={()=>setLoad({id:item.id,legacy:true})}>载入</Button><Button variant="ghost" className="min-h-11" onClick={()=>setRename({id:item.id,name:item.name,legacy:true})}>改名</Button><Button variant="ghost" className="min-h-11" onClick={()=>setRemove({id:item.id,legacy:true})}>删除</Button></div>)}</section>}
     <ImageViewer imageUrl={viewed?.result.imageUrl || ''} title={viewed?.name} open={viewerOpen} onOpenChange={setViewerOpen} />
+    <ReferenceComparisonDialog result={viewed?.result || null} open={comparisonOpen} onOpenChange={setComparisonOpen} />
     <CardViewer imageUrl={viewed?.result.imageUrl || ''} open={cardOpen} onOpenChange={setCardOpen} initialPresentation={viewed?.presentation} onSavePresentation={viewed ? (p)=>savePresentation(viewed.id,p) : undefined}/>
     <Dialog open={!!rename} onOpenChange={(open)=>{if(!open&&!creationBusy)setRename(null)}}><DialogContent><DialogHeader><DialogTitle>修改名称</DialogTitle><DialogDescription>名称只在本浏览器的作品库中使用。</DialogDescription></DialogHeader><form className="space-y-3" onSubmit={async(e)=>{e.preventDefault();if(rename && await report(()=>rename.legacy?renameOutfit(rename.id,rename.name):renameCreation(rename.id,rename.name),'名称已保存'))setRename(null)}}><Input aria-label="新名称" value={rename?.name||''} maxLength={80} onChange={(e)=>setRename((x)=>x?{...x,name:e.target.value}:null)}/><Button className="min-h-11" disabled={creationBusy||!rename?.name.trim()}>保存名称</Button></form></DialogContent></Dialog>
     <AlertDialog open={!!remove} onOpenChange={(open)=>{if(!open&&!creationBusy)setRemove(null)}}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>删除这条保存记录？</AlertDialogTitle><AlertDialogDescription>只删除作品库中的记录，不会删除后端输出或其他生成历史。</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>保留</AlertDialogCancel><Button disabled={creationBusy} onClick={async()=>{if(remove && await report(()=>remove.legacy?deleteOutfit(remove.id):deleteCreation(remove.id),'保存记录已删除'))setRemove(null)}}>删除记录</Button></AlertDialogFooter></AlertDialogContent></AlertDialog>
