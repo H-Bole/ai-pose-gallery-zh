@@ -18,6 +18,7 @@ import { useCreativeLibrary } from './useCreativeLibrary'
 import { migrateDirectorPreviewWorkflow } from '@/lib/directorPreviewMigration'
 import { durableImage, snapshotGeneration } from '@/lib/generationSnapshot'
 import { recipeBackup } from '@/lib/recipeImages'
+import { randomSlot, type RandomScope, type ReferencePools, type ReferenceSlot } from '@/lib/randomRecipe'
 import {
   buildRecipePrompt,
   COMFYUI_WORKFLOW_TEMPLATES,
@@ -235,6 +236,7 @@ interface StudioContextValue extends ReturnType<typeof useCreativeLibrary>, Retu
   setWorkflowImage: (nodeId: string, image: ExtraReferenceImage | null, identity: string) => void
   clearRecipe: () => void
   randomizeRecipe: (pools: { portraits?: PortraitItem[]; costumes?: CostumeItem[]; poses?: PoseItem[] }) => void
+  randomizeSlot: (slot: ReferenceSlot, scope: RandomScope, pools: ReferencePools) => void
   updateApiConfig: (patch: Partial<ApiConfig>) => void
   updateProviderConfig: (provider: ImageProviderId, patch: Partial<ProviderEndpointConfig>) => void
   updateGptParams: (patch: Partial<GptParams>) => void
@@ -295,6 +297,8 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   const [ageGateOpen, setAgeGateOpen] = useState(false)
   const pendingUnlockCbRef = useRef<(() => void) | null>(null)
   const [poseDepthMode, setPoseDepthModeState] = useState<boolean>(() => Boolean(recipe.pose?.useDepth))
+  const randomContext = useRef({ recipe, safeMode, poseDepthMode })
+  useEffect(() => { randomContext.current = { recipe, safeMode, poseDepthMode } }, [recipe, safeMode, poseDepthMode])
 
   // 提升到根部 Provider 的生成状态，路由切换不会卸载或中断
   const [customPrompt, setCustomPrompt] = useState<string | null>(null)
@@ -524,7 +528,8 @@ export function StudioProvider({ children }: { children: ReactNode }) {
 
   const randomizeRecipe = (pools: { portraits?: PortraitItem[]; costumes?: CostumeItem[]; poses?: PoseItem[] }) => {
     const posePool = safeMode ? (pools.poses || []).filter((p) => !isNsfwPose(p)) : pools.poses || []
-    const costumePool = (pools.costumes || []).filter((c) => c.source !== 'charadb' && (!safeMode || !isNsfwCostume(c)))
+    // 整套随机保持原有写实库范围；新增来源由明确选图或单槽换样进入。
+    const costumePool = (pools.costumes || []).filter((c) => !c.source && (!safeMode || !isNsfwCostume(c)))
     const portraitPool = pools.portraits || []
 
     const portrait = portraitPool.length ? portraitPool[Math.floor(Math.random() * portraitPool.length)] : undefined
@@ -533,6 +538,22 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     setRecipe((prev) => ({...prev, portrait: portrait ?? prev.portrait, costume: costume ?? prev.costume, pose: pose ?? prev.pose}))
     setRecipeReveal((value) => value + 1)
     toast.success(safeMode ? '已随机抽取一套角色配方（安全模式）' : '已随机抽取一套角色配方')
+  }
+
+  const randomizeSlot = (slot: ReferenceSlot, scope: RandomScope, pools: ReferencePools) => {
+    const current = randomContext.current
+    const next = randomSlot(current.recipe, slot, scope, {
+      ...pools,
+      costumes: (pools.costumes || []).filter((item) => !current.safeMode || !isNsfwCostume(item)),
+      poses: (pools.poses || []).filter((item) => !current.safeMode || !isNsfwPose(item)),
+    }, current.poseDepthMode)
+    if (!next) {
+      toast.info(scope === 'similar' ? '没有其他同类素材，可切到“全部”再试' : '没有其他可用素材')
+      return
+    }
+    setRecipe((previous) => ({ ...previous, [slot]: next[slot] }))
+    setRecipeReveal((value) => value + 1)
+    toast.success(`已更换${{ portrait: '人像', costume: '服装', pose: '姿势' }[slot]}，其他参考保持不变`)
   }
 
   const updateApiConfig = (patch: Partial<ApiConfig>) => {
@@ -745,6 +766,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
         setWorkflowImage,
         clearRecipe,
         randomizeRecipe,
+        randomizeSlot,
         updateApiConfig,
         updateProviderConfig,
         updateGptParams,
