@@ -2,7 +2,8 @@
 .tilt-surface[data-tilting]{transition:transform .08s linear;will-change:transform}
 .motion-toggle{display:inline-flex;align-items:center;gap:8px;font-size:12px}
 .motion-toggle select{min-height:44px;border:1px solid var(--border);border-radius:var(--radius-md);padding:0 8px;background:var(--background);color:var(--foreground);font-size:14px}
-.card-workspace{inset:0!important;transform:none!important;translate:none!important;width:100%!important;max-width:none!important;height:100dvh;max-height:100dvh;display:flex!important;flex-direction:column;gap:0!important;padding:0!important;border-radius:0!important;background:var(--background);overflow:hidden;animation:none!important}
+/* 用工作台自身的零位移类替换弹窗居中类，避免生产压缩合并 transform/translate 后残留负半屏位移。 */
+.card-workspace{width:100%!important;max-width:none!important;height:100dvh;max-height:100dvh;display:flex!important;flex-direction:column;gap:0!important;padding:0!important;border-radius:0!important;background:var(--background);overflow:hidden;animation:none!important}
 .card-workspace-heading{display:flex;align-items:center;gap:16px;padding:12px 24px;border-bottom:1px solid var(--border);background:var(--background);flex-shrink:0}
 .card-workspace-title{display:flex;gap:12px;align-items:center;min-width:0;flex:1}
 .card-workspace-title>div{min-width:0}
