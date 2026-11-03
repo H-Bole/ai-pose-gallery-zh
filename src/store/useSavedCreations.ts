@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/notifications'
 import { isNsfwCostume, isNsfwPose } from '@/api/gallery'
 import { idbRead, idbWrite } from '@/lib/idbStorage'
 import { durableImage, restoreGeneration, restoreRecipe } from '@/lib/generationSnapshot'
@@ -35,11 +35,11 @@ export function useSavedCreations(input: {
     await idbWrite(KEY, next)
     current.current = next; setCreations(next)
   }
-  const saveCreation = (result: GenerationHistoryItem, name: string) => write(async () => {
+  const saveCreation = (result: GenerationHistoryItem, name: string, presentation?: CardPresentation, presentationPreview?: string) => write(async () => {
     if (!name.trim()) throw new Error('请填写作品名称')
     const imageUrl = await durableImage(result.imageUrl)
     const existing = current.current.find((x) => x.result.id === result.id)
-    const item: SavedCreation = { ...existing, id: existing?.id || crypto.randomUUID(), name: name.trim(), createdAt: existing?.createdAt || Date.now(), result: {...structuredClone(result), imageUrl} }
+    const item: SavedCreation = { ...existing, id: existing?.id || crypto.randomUUID(), name: name.trim(), createdAt: existing?.createdAt || Date.now(), result: {...structuredClone(result), imageUrl}, ...(presentation ? { presentation: normalizeCardPresentation(presentation), presentationPreview } : {}) }
     await persist([item, ...current.current.filter((x) => x.id !== item.id)])
     return item.id
   })
@@ -48,9 +48,9 @@ export function useSavedCreations(input: {
     await persist(current.current.map((x) => x.id === id ? {...x, name: name.trim()} : x))
   })
   const deleteCreation = (id: string) => write(() => persist(current.current.filter((x) => x.id !== id)))
-  const savePresentation = (id: string, presentation: CardPresentation) => write(async () => {
+  const savePresentation = (id: string, presentation: CardPresentation, preview?: string) => write(async () => {
     if (!current.current.some((x) => x.id === id)) throw new Error('该作品已不存在，无法保存样式')
-    await persist(current.current.map((x) => x.id === id ? {...x, presentation: normalizeCardPresentation(presentation)} : x))
+    await persist(current.current.map((x) => x.id === id ? {...x, presentation: normalizeCardPresentation(presentation), presentationPreview: preview} : x))
   })
   const loadCreation = (id: string) => {
     const snapshot = current.current.find((x) => x.id === id)?.result.snapshot

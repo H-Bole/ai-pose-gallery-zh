@@ -1,4 +1,8 @@
 export interface CardPresentation {
+  version?: 2
+  engine?: 'holocardlab'
+  effectId?: string
+  effectStrength?: number
   layout: 'original' | 'collectible' | 'player'
   finish: 'none' | 'foil' | 'emboss' | 'holo'
   title: string
@@ -29,5 +33,9 @@ export function normalizeCardPresentation(value?: Partial<CardPresentation>): Ca
     number: typeof p.number === 'string' ? p.number.slice(0, 16) : '',
     cropX: unit(p.cropX, .5), cropY: unit(p.cropY, .5),
     lightX: unit(p.lightX, .35), lightY: unit(p.lightY, .25),
+    ...(p.engine === 'holocardlab' && typeof p.effectId === 'string' ? {
+      version: 2 as const, engine: 'holocardlab' as const, effectId: p.effectId,
+      effectStrength: unit(p.effectStrength ?? .6, .6), finish: 'none' as const,
+    } : { version: undefined, engine: undefined, effectId: undefined, effectStrength: undefined }),
   }
 }

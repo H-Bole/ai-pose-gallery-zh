@@ -198,4 +198,5 @@ export interface SavedCreation {
   createdAt: number
   result: GenerationHistoryItem
   presentation?: import('./cards').CardPresentation
+  presentationPreview?: string
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/notifications'
 import { idbRead, idbWrite } from '@/lib/idbStorage'
 const KEY = 'pose_atlas_favorites_v1'
 interface FavoriteItem { id: string; source?: string; selectedView?: string; views?: Array<{id: string}> }

@@ -61,6 +61,24 @@ function GuidePage() {
         </div>
       </Section>
 
+      <Section title="参考上传、连接与任务恢复" className="@lg/section:grid-cols-1">
+        <div className="space-y-2 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
+          <p>工作流图片用“选择图片／替换图片”按钮选择，显示实际文件名与“已选择，生成时上传”。可预览或清除；未选择时按说明沿用工作流原图或保持可选空状态。读取失败保留原图，可重新选择同一文件。</p>
+          <p>ComfyUI 状态根据 HTTP 检测显示，填入地址或密钥只说明已配置。检测等待最多 8 秒；使用创作间或接口配置且页面可见时，每 30 秒静默检查，后台暂停，恢复可见或联网后检查。手动“检测连接”在同一条通知中更新结果。</p>
+          <p>HTTP 可达不代表生成任务的 WebSocket 已连接，任务实时连接与进度在生成结果区单独显示。“待确认任务”位于结果下方；恢复跟踪查询原任务，不重复提交；“停止跟踪（不取消后端）”只结束本地跟踪，提交新任务前应核对后端队列。</p>
+        </div>
+      </Section>
+
+      <Section title="保存作品与制卡" className="@lg/section:grid-cols-1">
+        <div className="space-y-2 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
+          <p>当前结果、历史和作品库可进入“制卡与分享”。全屏工作台提供材质、版式、文字三个页签，默认无材质；静态缩略图目录支持搜索、分类及变体展开，共 83 项效果及变体。旧卡不会自动转换。</p>
+          <p>移动、播放或倾斜感应只用于试看。满意后点击“采用当前光位”，保存样式及导出才会使用此位置；减少动态效果时仍可手动调整。文字、版式与材质不改变原作品的生成配方。</p>
+          <p>结果／历史可“保存到作品库”，已有作品可“保存样式”。关闭有修改的工作台时，可继续编辑、放弃修改或保存并关闭。下载原图保留原文件；导出 PNG 长边 2048 px，不加入参考图、提示词或连接信息。内容保存在当前浏览器，清理站点数据或更换域名不会自动迁移。</p>
+          <p>卡面效果来自 <a className="underline" href="https://github.com/H-Bole/HoloCardLab" target="_blank" rel="noopener noreferrer">HoloCardLab</a>，可查看其<a className="underline" href="https://h-bole.github.io/HoloCardLab/" target="_blank" rel="noopener noreferrer">公开效果演示</a>；应用保留相应 MIT 许可与第三方来源说明。</p>
+          <p>侧栏的 GitHub 与 <a className="underline" href="https://x.com/Xiaoyao_111" target="_blank" rel="noopener noreferrer">X · Xiaoyao_111</a> 为个人版入口，上游与素材作者链接仍见本页归属说明。</p>
+        </div>
+      </Section>
+
       <Section title="免责声明与合规使用规范（必读）" className="@lg/section:grid-cols-1">
         <div className="space-y-2.5 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
           <p>

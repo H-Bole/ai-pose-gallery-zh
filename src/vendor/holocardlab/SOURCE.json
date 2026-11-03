@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/H-Bole/HoloCardLab",
+  "commit": "f33412cbfc93d0f0a67f05c36e29e0f35fc3baeb",
+  "files": [
+    "renderer.js",
+    "optics.js",
+    "presets.js",
+    "orientation.js",
+    "catalog.js"
+  ],
+  "license": "MIT",
+  "excludedWebEffects": [
+    "other-dark-emboss",
+    "other-silver-engraving"
+  ],
+  "sha256": {
+    "renderer.js": "6bfeb08b93241210c019c617b03c7d419de35b9c9fd6b28db3c277e62f1b93cc",
+    "optics.js": "f2bb8f3e1b3abe4876070c16add2aa5e8e8409fb055beb24f36b14d5cc3c3f0e",
+    "presets.js": "3332c9e598aa1f7fc5b8bc01347f0a77afdd2156befc5f8c45d05a2ac919f95c",
+    "orientation.js": "e89e011f69d7d362f1a29301a1d8079b7f92cb4a027e9505397e00c05f7edee9",
+    "catalog.js": "14cecdb1db0ef5cbfc482d009f80c27e27241b76b23e4a1149cc115490331ae6",
+    "LICENSE": "31fddf6be12374824cc65e1a3f0adbbb40f033e53f040ad1dca64e9c0d9d0488",
+    "THIRD_PARTY_NOTICES.md": "08c4b539c82c64e98f01aa4545428d426b038864c599ec04e0213e6fd32296c1"
+  }
+}

@@ -3,3 +3,6 @@ data/gia-anime/costume-anime.json -text
 data/shisei/costumes.json -text
 data/shisei/LICENSE-images -text
 data/shisei/NOTICE -text
+src/vendor/holocardlab/*.js -text
+src/vendor/holocardlab/LICENSE -text
+src/vendor/holocardlab/THIRD_PARTY_NOTICES.md -text

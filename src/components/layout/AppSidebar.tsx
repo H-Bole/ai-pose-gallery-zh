@@ -1,5 +1,6 @@
 import { Link, useLocation } from '@tanstack/react-router'
-import { ExternalLinkIcon, SparklesIcon } from 'lucide-react'
+import { SparklesIcon } from 'lucide-react'
+import { GitHubLogo, XLogo } from '@/components/common/PlatformIcons'
 import { Badge } from '@/components/ui/badge'
 import {
   Sidebar,
@@ -93,8 +94,15 @@ export function AppSidebar() {
                 rel="noopener noreferrer"
                 className="text-xs text-muted-foreground"
               >
-                <ExternalLinkIcon className="size-3.5" />
+                <GitHubLogo className="size-4" />
                 <span>GitHub · H-Bole</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="sm" asChild tooltip="访问 X · Xiaoyao_111">
+              <a href="https://x.com/Xiaoyao_111" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground" aria-label="X · Xiaoyao_111（新标签页）">
+                <XLogo className="size-4" /><span>X · Xiaoyao_111</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

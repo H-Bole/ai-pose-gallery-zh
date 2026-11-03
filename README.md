@@ -1,61 +1,27 @@
 # 衣想天开 · 穿搭灵感与角色创作
 
-**H-Bole 是本个人版维护者，也是上游多项核心功能贡献者。** 本版本基于 Anhao 中文版持续维护，保留上游、图库作者归属及原许可证。
+把人像、服装和姿势参考整合到一个创作空间，支持 ComfyUI 生图、作品管理、参考对比与制卡导出。个人版由 H-Bole 维护，基于 Anhao 中文版持续改进。
 
-已合并的上游贡献：[参考槽直接上传与工作流校验 #19](https://github.com/anhao/ai-pose-gallery-zh/pull/19)、[动态高级参数与设定集参考 #23](https://github.com/anhao/ai-pose-gallery-zh/pull/23)、[响应式布局边界修复 #29](https://github.com/anhao/ai-pose-gallery-zh/pull/29)、[CharaDB 二次元服装接入 #30](https://github.com/anhao/ai-pose-gallery-zh/pull/30)。合并状态已于 2026-11-03 核对。
+## 日常入口与当前功能
 
-新增[收藏、搭配保存、成品续创与任务恢复说明](docs/创作保存与任务恢复.md)。界面维护遵循[统一界面与图片查看规范](docs/界面规范.md)。
+[个人首页](https://pose.boledev.dpdns.org/) · [创作间](https://pose.boledev.dpdns.org/studio) · [作品与搭配库](https://pose.boledev.dpdns.org/library) · [接口配置](https://pose.boledev.dpdns.org/settings) · [个人仓库](https://github.com/H-Bole/ai-pose-gallery-zh) · [X · Xiaoyao_111](https://x.com/Xiaoyao_111)
 
-品牌使用原稿最右侧 I 标志（环抱弧线与层叠衣料），发布素材见 [public/brand](public/brand/README.md)。仓库名、插件标识和现有数据保持兼容。
+从图库挑选或上传人像、服装、姿势，按需单槽“换一个”，配置服务后生成；结果可对比当次参考、保存作品、载入配方继续创作，也可进入独立制卡工作台。
 
-**个人在线版：** [图库首页](https://pose.boledev.dpdns.org/) · [创作间](https://pose.boledev.dpdns.org/studio)
-**个人仓库：** [H-Bole/ai-pose-gallery-zh](https://github.com/H-Bole/ai-pose-gallery-zh)
+| 使用事项 | 入口与行为 |
+| --- | --- |
+| 收藏、保存与续创 | [作品、配方与任务恢复](docs/创作保存与任务恢复.md)：作品独立于最近生成记录保存，旧搭配继续可用 |
+| 卡面展示 | [制卡工作台](docs/card-workspace.md)：全屏预览；材质／版式／文字；83 项效果及变体；采用光位、保存样式、2048 px PNG |
+| 工作流参考与参数 | [高级参数说明](docs/comfyui-workflow-parameters.md)：按钮选择／替换图片，显示实际文件名；“已选择，生成时上传”；未选择可沿用工作流原图 |
+| ComfyUI 连接 | 接口配置与创作间显示 HTTP 检测状态；8 秒超时，页面可见时每 30 秒静默检测，手动“检测连接”更新同一通知；HTTP 可达不代表任务 WebSocket 已连接 |
+| 待确认任务 | 位于创作间右栏生成结果下方，可恢复原任务跟踪或停止跟踪；停止跟踪不会取消后端任务。详见[任务连接与恢复](docs/comfyui-task-tracking.md) |
+| 界面与通知 | [界面规范](docs/界面规范.md)：统一控件、大图查看、通知排队与动效偏好 |
 
-> **姿势库（1,439 张素体白模 + 1,439 张深度图 Depth） + 服装库（原写实 1,407 套 + CharaDB 440 套 + 动漫表现 1,320 条 + 中国历代 57 套） + 人像库（1,499 位） = 6,162 条全中文参考数据 / 12,022 个本地图片文件（含缩略图与视角），另有 1,760 条来源站点图片参考**，集成 **5 大 AI 图像协议直连工作台** 与 **原生 ComfyUI 自定义节点插件（`custom_nodes`）**。
+图库共 **6,162 条参考 / 12,022 个本地图库图片文件**：姿势 1,439 条、服装 3,224 套／表现、人像 1,499 位；另有 1,760 条服装图片参考从来源站按需读取。83 张卡面目录缩略图为界面资源，不计入参考主体。应用保留 **5 大 AI 图像协议**和 **ComfyUI 原生自定义节点**。数量及来源分类见下方数据表。
 
-以下 `docs/` 截图为上游中文版界面示意，个人版的当前界面以在线站点为准。
+品牌采用 I 标志（环抱弧线与层叠衣料），发布素材见 [public/brand](public/brand/README.md)。仓库名、插件标识与已有数据保持兼容。
 
-![上游中文版画廊界面示意](docs/preview.jpg)
-
-![上游中文版角色合成台界面示意](docs/studio.jpg)
-
-<details><summary>手机端预览</summary>
-
-![上游中文版手机端界面示意](docs/mobile.jpg)
-
-</details>
-
-**上游中文版站点：** <https://ai-pose-gallery.anhao.app/>
-**原始站点：**
-- 姿势库（白模）：<https://ai-pose-gallery.pages.dev/>
-- 姿势深度图库（Depth）：<https://ai-pose-depth-gallery.pages.dev/>
-- 服装库：<https://ai-costume-gallery.pages.dev/>
-- 人像库：<https://ai-portrait-gallery.pages.dev/>
-
-**原有图库作者：** ギア（@giaaibusi）；二次元服装作者：たき AI（[@taki_auto](https://x.com/taki_auto) · [CharaDB](https://charadb-2fi.pages.dev/)）。
-**上游中文版维护：** Anhao · [X @anhao_ai](https://x.com/anhao_ai)
-**上游仓库：** <https://github.com/anhao/ai-pose-gallery-zh>
-
-> ⚠️ **免责声明（必读）**：
-> 1. **学习与创作限定**：本项目及配套插件/工作流**仅供个人学习、人体动态研究、合法艺术创作与技术交流使用**，严禁用于任何违反法律法规、生成违法违规/淫秽色情内容或侵害他人合法权益（如未经授权的真人肖像换脸）的用途。
-> 2. **NSFW 敏感内容提示**：图库包含部分 18+ 成人向人体素体姿势与内衣/性感穿搭参考，系统默认开启「安全模式 (SFW)」隐藏，**未成年人严禁解锁或访问**。
-> 3. **来源与版权声明**：原有姿势、现实服装、人像参考图源自原作者 **ギア（@giaaibusi）** 公开站点；440 套二次元服装源自 **たき AI（@taki_auto）** 的 [CharaDB](https://charadb-2fi.pages.dev/)（详见其 [LICENSE](https://github.com/taki-ttt/charadb/blob/main/LICENSE)），版权归各自原作者所有；本仓库仅为中文翻译整理与工程学习存档，禁止将图库图片打包倒卖。使用者因违规使用产生的一切法律责任由使用者本人独立承担。
-
----
-
-## 这是什么
-
-原站是ギア（@giaaibusi）发布的三大 AI 绘画参考图库（姿势、服装、人像），元数据全部为日文，且分散在三个独立站点。本仓库（v2.0）完成了**三站合一、全量中文化、AI 角色合成工作台与 ComfyUI 原生插件升级**：
-
-1. **三库四站全量本地镜像（11,568 张图）** —— 完整收录姿势库（素体白模 2,878 张 + 深度图 Depth 2,878 张 WebP）、服装库（2,814 张 WebP）、人像库（2,998 张，全尺寸 `1600×2000` 高清 WebP）的全部缩略图与高清原图，支持纯离线浏览与静态托管。
-2. **原有图库全中文元数据** —— 动作体系、姿势分类、服装款式、穿搭标签、人像分区、发长与 51 种细分发型全部译为地道中文，自动组装的生图提示词纯净无日文干扰。
-3. **三合一 AI 角色合成工作台（Web Studio）** —— 基于 **React 19 + Tailwind CSS 4 + TypeScript 7 + shadcn/ui + TanStack Router** 构建的响应式多页面应用（兼容 PC / 平板 / 手机）：
-   - 从三大图库任意挑选 **人像 + 服装 + 姿势（支持素体白模 / 深度图一键切换）** 组合配方，或一键随机捏人；
-   - 支持拖拽、剪贴板粘贴（`Cmd+V` / `Ctrl+V`）或 URL 添加多张自定义附加参考图；
-   - 内置 **5 大 AI 图像协议直连**（Google Gemini、OpenAI GPT Image、阿里云百炼 Qwen、字节火山方舟 Doubao、**本地 ComfyUI**），生成记录通过 **IndexedDB** 本地持久化保存。
-4. **原生 ComfyUI 自定义节点插件（`custom_nodes`）** —— 本仓库同时是一个即插即用的 ComfyUI 插件！直接 `git clone` 到 `ComfyUI/custom_nodes/` 即可在 ComfyUI 画布内使用 **姿势 / 服装 / 人像 / 三合一角色配方** 4 个自定义节点（姿势与配方节点内置 `use_depth` 深度图切换，可直接接入 ControlNet Depth）与内置的 **6,162 条中文可视化弹窗选图器**。
-
----
+默认开启安全模式；素材使用条件见[来源与许可](#来源与许可)。
 
 ## 核心功能
 
@@ -96,6 +62,28 @@
 
 ---
 
+### 单槽换样与提交参考对比
+
+创作间每个参考槽可点“换一个”，同类范围遵循人像分区与发长、服装来源/类型/分类、姿势体系与动作分类；可切换全部。操作不会自动生成，保留其他槽、参数和手动提示词。无候选时提示，上传内容不进入随机池，整套随机沿用原有写实候选池。
+
+生成结果、历史和个人作品均可“对比参考”，依据当次提交快照显示人像、服装、姿势、附图和有效工作流参考，支持并排、滑杆、共同缩放移动与键盘操作。旧记录没有快照时明确提示，不使用当前配方替代。
+
+### 新增服装与多视角
+
+ギア动漫源新增1,320条同款穿搭的动漫表现；只保存固定元数据和原站地址，图片按需读取，失效时可重试。Shisei新增57套中国历代服装，227个有效视角；详情、收藏、已选槽、配方与提交快照保留选定视角。ComfyUI服装与配方节点的可选 `costume_view` 默认 `front`，旧节点名称和端口保持兼容。
+
+图片许可、固定修订、数量与哈希、复现导入方法见 [素材来源说明](docs/COSTUME-SOURCES.md)。Shisei按发布者CC0 1.0声明使用，标注AI生成参考，不视为专业服饰考据。
+
+### 二次元服装（CharaDB）
+
+新增 **たき AI（[@taki_auto](https://x.com/taki_auto)）** [CharaDB](https://charadb-2fi.pages.dev/) 公开版 **440 套**二次元服装：服装页与 ComfyUI 选图器均支持按 **`[ 全部 | 现实 | 二次元 ]`** 一级分类、15 个二级分类及单品颜色标签筛选，支持中文名称、英文 Danbooru 标签和编号检索。
+
+- **在线原图加载**：根据[原作者 LICENSE](https://github.com/taki-ttt/charadb/blob/main/LICENSE)（标签为 CC0，图片仅作参考且禁止再分发、禁止用于真人或未成年人用途），本仓库仅收录中文翻译与标签元数据（`data/costume-anime-zh.json`），图片直接从原站在线加载，不随本仓库打包分发。
+- **数据更新脚本**：
+  ```bash
+  python3 scripts/import_charadb.py
+  ```
+
 ## 数据规模
 
 | 图库 | 分类 / 体系划分 | 记录数 | 本地图片文件数 |
@@ -134,8 +122,39 @@ git clone --depth 1 https://github.com/H-Bole/ai-pose-gallery-zh.git
    ```bash
    python main.py --enable-cors-header "*"
    ```
-2. 打开本工作台 **「接口配置」** 页面 → 切换到 **「本地 ComfyUI」** → 点击「检测连接」（默认 `http://127.0.0.1:8188`）；
+2. 打开本工作台 **「接口配置」** 页面 → 切换到 **「本地 ComfyUI」** → 点击「检测连接」（本地网页可用 `/comfy` 同源代理；直连 Desktop 默认端口 8000、便携版默认 8188）；
 3. 可直接导入您在 ComfyUI 中通过 `工作流 -> 导出 (API)` 保存的 `.json` 文件（支持 `{{prompt}}`、`{{seed}}`、`{{width}}`、`{{height}}`、`{{composite_image}}`、`{{portrait_image}}`、`{{costume_image}}`、`{{pose_image}}` 占位符，或由系统自动匹配 `CLIPTextEncode` / `KSampler` / `LoadImage` 节点），也可在 **「合成台」** 一键导出内置通用工作流模板。
+
+---
+
+## 本地开发与构建
+
+需要 **Node.js 24** 与 **pnpm 11.22.0**：
+
+```bash
+# 1. 安装依赖
+pnpm install
+
+# 2. 启动本地开发服务器（默认 http://localhost:5173）
+pnpm dev
+
+# 3. 类型检查 + 生产构建 + 代码规范检查
+pnpm build && pnpm lint
+```
+
+### 数据与图片维护脚本（Python 3）
+
+```bash
+# 拉取/补全三站图片（已存在的文件自动跳过，支持断点续传）
+python3 scripts/download.py
+WORKERS=64 python3 scripts/download.py   # 调整并发线程数
+
+# 修改 scripts/i18n.py 词典后，重新生成三库中文 JSON
+python3 scripts/apply_translation.py
+
+# 校验全部图片文件是否完整
+python3 scripts/verify.py
+```
 
 ---
 
@@ -180,37 +199,6 @@ git clone --depth 1 https://github.com/H-Bole/ai-pose-gallery-zh.git
 │   └── build.sh            # 构建 Cloudflare 发布目录 dist/
 ├── skills/                 # Claude Code / Agent 姿势・服装・人像检索技能包
 └── README.md
-```
-
----
-
-## 本地开发与构建
-
-需要 **Node.js 24** 与 **pnpm 11.22.0**：
-
-```bash
-# 1. 安装依赖
-pnpm install
-
-# 2. 启动本地开发服务器（默认 http://localhost:5173）
-pnpm dev
-
-# 3. 类型检查 + 生产构建 + 代码规范检查
-pnpm build && pnpm lint
-```
-
-### 数据与图片维护脚本（Python 3）
-
-```bash
-# 拉取/补全三站图片（已存在的文件自动跳过，支持断点续传）
-python3 scripts/download.py
-WORKERS=64 python3 scripts/download.py   # 调整并发线程数
-
-# 修改 scripts/i18n.py 词典后，重新生成三库中文 JSON
-python3 scripts/apply_translation.py
-
-# 校验全部图片文件是否完整
-python3 scripts/verify.py
 ```
 
 ---
@@ -294,27 +282,54 @@ for d in ~/ai-pose-gallery-zh/skills/*-reference*; do ln -s "$d" ~/.claude/skill
 
 ---
 
-## 单槽换样与提交参考对比
+## 界面示意与项目沿革
 
-创作间每个参考槽可点“换一个”，同类范围遵循人像分区与发长、服装来源/类型/分类、姿势体系与动作分类；可切换全部。操作不会自动生成，保留其他槽、参数和手动提示词。无候选时提示，上传内容不进入随机池，整套随机沿用原有写实候选池。
+<details>
+<summary>查看上游界面示意</summary>
 
-生成结果、历史和个人作品均可“对比参考”，依据当次提交快照显示人像、服装、姿势、附图和有效工作流参考，支持并排、滑杆、共同缩放移动与键盘操作。旧记录没有快照时明确提示，不使用当前配方替代。
+以下 `docs/` 截图为上游中文版界面示意，个人版的当前界面以在线站点为准。
 
-## 新增服装与多视角
+![上游中文版画廊界面示意](docs/preview.jpg)
 
-ギア动漫源新增1,320条同款穿搭的动漫表现；只保存固定元数据和原站地址，图片按需读取，失效时可重试。Shisei新增57套中国历代服装，227个有效视角；详情、收藏、已选槽、配方与提交快照保留选定视角。ComfyUI服装与配方节点的可选 `costume_view` 默认 `front`，旧节点名称和端口保持兼容。
+![上游中文版角色合成台界面示意](docs/studio.jpg)
 
-图片许可、固定修订、数量与哈希、复现导入方法见 [素材来源说明](docs/COSTUME-SOURCES.md)。Shisei按发布者CC0 1.0声明使用，标注AI生成参考，不视为专业服饰考据。
+<details><summary>手机端预览</summary>
 
-## 二次元服装（CharaDB）
+![上游中文版手机端界面示意](docs/mobile.jpg)
 
-新增 **たき AI（[@taki_auto](https://x.com/taki_auto)）** [CharaDB](https://charadb-2fi.pages.dev/) 公开版 **440 套**二次元服装：服装页与 ComfyUI 选图器均支持按 **`[ 全部 | 现实 | 二次元 ]`** 一级分类、15 个二级分类及单品颜色标签筛选，支持中文名称、英文 Danbooru 标签和编号检索。
+</details>
 
-- **在线原图加载**：根据[原作者 LICENSE](https://github.com/taki-ttt/charadb/blob/main/LICENSE)（标签为 CC0，图片仅作参考且禁止再分发、禁止用于真人或未成年人用途），本仓库仅收录中文翻译与标签元数据（`data/costume-anime-zh.json`），图片直接从原站在线加载，不随本仓库打包分发。
-- **数据更新脚本**：
-  ```bash
-  python3 scripts/import_charadb.py
-  ```
+</details>
+
+<details>
+<summary>查看三库合一的早期实现说明</summary>
+
+原站是ギア（@giaaibusi）发布的三大 AI 绘画参考图库（姿势、服装、人像），元数据全部为日文，且分散在三个独立站点。本仓库（v2.0）完成了**三站合一、全量中文化、AI 角色合成工作台与 ComfyUI 原生插件升级**：
+
+1. **原始三库本地镜像基线（11,568 张图）** —— 完整收录姿势库（素体白模 2,878 张 + 深度图 Depth 2,878 张 WebP）、服装库（2,814 张 WebP）、人像库（2,998 张，全尺寸 `1600×2000` 高清 WebP）的全部缩略图与高清原图，支持纯离线浏览与静态托管。
+2. **原有图库全中文元数据** —— 动作体系、姿势分类、服装款式、穿搭标签、人像分区、发长与 51 种细分发型全部译为地道中文，自动组装的生图提示词纯净无日文干扰。
+3. **三合一 AI 角色合成工作台（Web Studio）** —— 基于 **React 19 + Tailwind CSS 4 + TypeScript 7 + shadcn/ui + TanStack Router** 构建的响应式多页面应用（兼容 PC / 平板 / 手机）：
+   - 从三大图库任意挑选 **人像 + 服装 + 姿势（支持素体白模 / 深度图一键切换）** 组合配方，或一键随机捏人；
+   - 支持拖拽、剪贴板粘贴（`Cmd+V` / `Ctrl+V`）或 URL 添加多张自定义附加参考图；
+   - 内置 **5 大 AI 图像协议直连**（Google Gemini、OpenAI GPT Image、阿里云百炼 Qwen、字节火山方舟 Doubao、**本地 ComfyUI**），生成记录通过 **IndexedDB** 本地持久化保存。
+4. **原生 ComfyUI 自定义节点插件（`custom_nodes`）** —— 本仓库同时是一个即插即用的 ComfyUI 插件！直接 `git clone` 到 `ComfyUI/custom_nodes/` 即可在 ComfyUI 画布内使用 **姿势 / 服装 / 人像 / 三合一角色配方** 4 个自定义节点（姿势与配方节点内置 `use_depth` 深度图切换，可直接接入 ControlNet Depth）与内置的 **6,162 条中文可视化弹窗选图器**。
+
+---
+
+</details>
+
+## 来源与许可
+
+**上游中文版站点：** <https://ai-pose-gallery.anhao.app/>
+**原始站点：**
+- 姿势库（白模）：<https://ai-pose-gallery.pages.dev/>
+- 姿势深度图库（Depth）：<https://ai-pose-depth-gallery.pages.dev/>
+- 服装库：<https://ai-costume-gallery.pages.dev/>
+- 人像库：<https://ai-portrait-gallery.pages.dev/>
+
+**原有图库作者：** ギア（@giaaibusi）；二次元服装作者：たき AI（[@taki_auto](https://x.com/taki_auto) · [CharaDB](https://charadb-2fi.pages.dev/)）。
+**上游中文版维护：** Anhao · [X @anhao_ai](https://x.com/anhao_ai)
+**上游仓库：** <https://github.com/anhao/ai-pose-gallery-zh>
 
 ## 免责声明与版权说明（Disclaimer）
 
@@ -329,5 +344,12 @@ for d in ~/ai-pose-gallery-zh/skills/*-reference*; do ln -s "$d" ~/.claude/skill
    - 本仓库原有姿势（`ai-pose-gallery.pages.dev`）、服装（`ai-costume-gallery.pages.dev`）、人像（`ai-portrait-gallery.pages.dev`，CC0 1.0 协议）图片与原始数据的著作权归原作者 **ギア（@giaaibusi）** 所有。
    - 新增动漫服装表现来自同作者动漫站，仅远程按需读取；不得将镜像仓库的代码许可套用到图片。CharaDB图片继续遵守其独立来源说明。
    - 中国历代服装来自 [wquguru/shisei](https://github.com/wquguru/shisei)，按发布者CC0 1.0声明使用，保留来源与固定版本许可。各来源条件分别适用，详见[素材来源说明](docs/COSTUME-SOURCES.md)。
+   - CharaDB 作者为たき AI（[@taki_auto](https://x.com/taki_auto)），遵循其[独立许可证](https://github.com/taki-ttt/charadb/blob/main/LICENSE)；禁止将图库图片打包倒卖。
 4. **开源协议**
    - 前端应用代码（`src/`）、ComfyUI 插件（`comfyui_plugin/`）与数据处理脚本（`scripts/`）以 [MIT 协议](LICENSE) 开源；该协议**不覆盖** `img/`、`thumbs/` 与 `data/` 中的图片及原始数据。
+
+## 贡献与历史说明
+
+已合并的上游贡献：[参考槽直接上传与工作流校验 #19](https://github.com/anhao/ai-pose-gallery-zh/pull/19)、[动态高级参数与设定集参考 #23](https://github.com/anhao/ai-pose-gallery-zh/pull/23)、[响应式布局边界修复 #29](https://github.com/anhao/ai-pose-gallery-zh/pull/29)、[CharaDB 二次元服装接入 #30](https://github.com/anhao/ai-pose-gallery-zh/pull/30)。合并状态已于 2026-11-03 核对。
+
+该日期快照只记录当时核对结果，不代表后续全部 PR 或本轮发布状态。本地跨目录部署、迁移与验收资料由父目录项目总览统一索引，随源码发布的使用说明继续放在本仓库 `docs/`。

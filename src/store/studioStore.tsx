@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext, useEffect, useEffectEvent, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/notifications'
 import { isNsfwCostume, isNsfwPose } from '@/api/gallery'
 import {
   AlertDialog,
@@ -14,6 +14,7 @@ import {
 import { idbRead, idbWrite } from '@/lib/idbStorage'
 import { parseParameterWorkflow, workflowIdentity } from '@/lib/comfyWorkflowParameters'
 import { useSavedCreations } from './useSavedCreations'
+import { useComfyConnection, type ComfyConnectionState } from './useComfyConnection'
 import { useCreativeLibrary } from './useCreativeLibrary'
 import { migrateDirectorPreviewWorkflow } from '@/lib/directorPreviewMigration'
 import { durableImage, snapshotGeneration } from '@/lib/generationSnapshot'
@@ -198,6 +199,9 @@ function mergeStoredConfig(raw: unknown): ApiConfig {
 }
 
 interface StudioContextValue extends ReturnType<typeof useCreativeLibrary>, ReturnType<typeof useSavedCreations> {
+  comfyConnection: ComfyConnectionState
+  checkComfyConnection: (manual?: boolean) => Promise<void>
+  setComfyConnectionVisible: (visible: boolean) => void
   hydrated: boolean
   recipeReveal: number
   generationReveal: number
@@ -286,6 +290,9 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     }
   })
 
+  const [comfyConnectionVisible, setComfyConnectionVisible] = useState(false)
+  const { comfyConnection, checkComfyConnection } = useComfyConnection(apiConfig.providers.comfyui.baseUrl, apiConfig.providers.comfyui.apiKey, comfyConnectionVisible && apiConfig.activeProvider === 'comfyui')
+
   const [safeMode, setSafeMode] = useState<boolean>(() => {
     try {
       const raw = localStorage.getItem(SAFE_MODE_KEY)
@@ -355,7 +362,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
       activeTaskRef.current = savedTask || null
       setActiveTask(savedTask || null)
       setIdbHydrated(true)
-    }).catch(() => { if (active) toast.error('无法读取浏览器存储，已暂停生成以保护未决任务；请恢复存储后刷新') })
+    }).catch(() => { if (active) toast.error('无法读取浏览器存储，已暂停生成以保护待确认任务；请恢复存储后刷新') })
     return () => {
       active = false
     }
@@ -691,7 +698,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   useEffect(() => () => trackingRef.current?.abort(), [])
   const startGeneration = async (overridePrompt?: string) => {
     if (!idbHydrated || isGeneratingRef.current) return
-    if (activeTaskRef.current) { toast.error('存在未决任务，请先恢复或明确停止跟踪'); return }
+    if (activeTaskRef.current) { toast.error('存在待确认任务，请先恢复或明确停止跟踪'); return }
     const recipeSnapshot = recipe
     const configSnapshot = apiConfig
     const finalPrompt = overridePrompt ?? customPrompt ?? buildRecipePrompt(recipeSnapshot, configSnapshot.stylePreset, configSnapshot.activeProvider === 'comfyui' && recipeSnapshot.workflowImagesIdentity === workflowIdentity(configSnapshot.comfyuiParams.workflowJson) ? Object.values(recipeSnapshot.workflowImages || {}) : [])
@@ -737,6 +744,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   return (
     <StudioContext.Provider
       value={{
+        comfyConnection, checkComfyConnection, setComfyConnectionVisible,
         ...library, ...savedCreations, hydrated: idbHydrated, recipeReveal, generationReveal,
         activeTask, resumeGeneration, stopTracking,
         recipe,

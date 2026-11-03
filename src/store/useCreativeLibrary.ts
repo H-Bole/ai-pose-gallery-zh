@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/notifications'
 import { isNsfwCostume, isNsfwPose } from '@/api/gallery'
 import { idbRead, idbWrite } from '@/lib/idbStorage'
 import { durableImage, durableRecipe } from '@/lib/persistentImages'

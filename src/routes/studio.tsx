@@ -31,9 +31,10 @@ import {
   XIcon,
 } from 'lucide-react'
 import { type ChangeEvent, type DragEvent, useEffect, useMemo, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { toast } from '@/lib/notifications'
 import { costumesQuery, portraitsQuery, posesQuery } from '@/api/gallery'
 import { Field, Section } from '@/components/common/FormSection'
+import { ComfyConnectionStatus } from '@/components/studio/ComfyConnectionStatus'
 import { WorkflowParameters } from '@/components/studio/WorkflowParameters'
 import { applyWorkflowOverrides, validateReferenceCombinations, workflowIdentity } from '@/lib/comfyWorkflowParameters'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -426,10 +427,10 @@ function StudioPage() {
       <PageHeader
         title="创作间"
         actions={
-          <Button variant="outline" size="sm" asChild>
+          activeProvider === 'comfyui' ? <ComfyConnectionStatus compact /> : <Button variant="outline" size="sm" asChild>
             <Link to="/settings">
               <KeyRoundIcon className="size-4" />
-              {providerCfg.apiKey ? `${providerMeta.shortName} 已就绪` : '配置 API Key'}
+              {providerCfg.apiKey.trim() ? `${providerMeta.shortName} 已配置` : '配置 API Key'}
             </Link>
           </Button>
         }
@@ -1406,13 +1407,6 @@ function StudioPage() {
             )}
           </Section>
 
-          {activeTask && <Section title="未决任务" className="@lg/section:grid-cols-1">
-            <p className="break-all text-xs">{activeTask.task ? `任务 ${activeTask.task.promptId}：刷新后查询原任务，不重复提交。` : '提交结果未知或提交前被中断，请核对后端队列；不会自动重试提交。'}</p>
-            <div className="flex flex-wrap gap-2">
-              <Button disabled={isGenerating || !activeTask.task} onClick={() => void resumeGeneration()}>恢复追踪</Button>
-              <Button variant="outline" onClick={() => void stopTracking()}>停止跟踪（不取消后端）</Button>
-            </div>
-          </Section>}
           {/* 3. 提示词与生成按钮 */}
           <Section
             title="3. 提示词 (Prompt)"
@@ -1465,7 +1459,7 @@ function StudioPage() {
         </div>
 
         {/* 右栏：专注展示 AI 生成结果与生成状态 */}
-        <div className="min-w-0 lg:col-span-5">
+        <div className="min-w-0 space-y-4 lg:col-span-5">
           <Section
             title="生成结果"
             className="@lg/section:grid-cols-1"
@@ -1544,6 +1538,13 @@ function StudioPage() {
             </div>
             </RevealSurface>
           </Section>
+          {activeTask && <Section title="待确认任务" className="@lg/section:grid-cols-1">
+            <p className="break-all text-xs">{activeTask.task ? `任务 ${activeTask.task.promptId}：刷新后查询原任务，不重复提交。` : '提交结果未知或提交前被中断，请核对后端队列；不会自动重试提交。'}</p>
+            <div className="flex flex-wrap gap-2">
+              <Button disabled={isGenerating || !activeTask.task} onClick={() => void resumeGeneration()}>恢复跟踪</Button>
+              <Button variant="outline" onClick={() => void stopTracking()}>停止跟踪（不取消后端）</Button>
+            </div>
+          </Section>}
         </div>
       </div>
 
@@ -1616,7 +1617,7 @@ function StudioPage() {
         </Section>
       )}
 
-      <CardViewer imageUrl={cardUrl} open={cardOpen} onOpenChange={setCardOpen}/>
+      <CardViewer imageUrl={cardUrl} result={history.find((item) => item.imageUrl === cardUrl)} open={cardOpen} onOpenChange={setCardOpen}/>
       <ReferenceComparisonDialog result={comparisonResult} open={comparisonResult !== null} onOpenChange={(open) => !open && setComparisonResult(null)} />
       {/* 生成结果全屏放大灯箱 */}
       <ImageViewer imageUrl={zoomImageUrl || ''} open={Boolean(zoomImageUrl)} onOpenChange={(open) => !open && setZoomImageUrl(null)} />
