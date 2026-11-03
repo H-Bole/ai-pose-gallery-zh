@@ -358,7 +358,7 @@ function StudioPage() {
   }
 
   const randomControls = (slot: ReferenceSlot, label: string) => <div className="flex basis-full flex-wrap items-center gap-2 border-t pt-2">
-    {slot === 'costume' && recipe.costume?.views && <Select value={recipe.costume.selectedView || 'front'} onValueChange={(value) => { if (recipe.costume) setCostume(selectCostumeView(recipe.costume, value)) }}>
+    {slot === 'costume' && recipe.costume?.views && <Select disabled={randomizingSlot !== null || uploadingSlot !== null} value={recipe.costume.selectedView || 'front'} onValueChange={(value) => { if (recipe.costume) setCostume(selectCostumeView(recipe.costume, value)) }}>
       <SelectTrigger aria-label="已选服装视角" className="min-h-11 w-24"><SelectValue /></SelectTrigger>
       <SelectContent>{recipe.costume.views.map((view) => <SelectItem key={view.id} value={view.id}>{view.label}</SelectItem>)}</SelectContent>
     </Select>}
