@@ -236,7 +236,7 @@ interface StudioContextValue extends ReturnType<typeof useCreativeLibrary>, Retu
   setWorkflowImage: (nodeId: string, image: ExtraReferenceImage | null, identity: string) => void
   clearRecipe: () => void
   randomizeRecipe: (pools: { portraits?: PortraitItem[]; costumes?: CostumeItem[]; poses?: PoseItem[] }) => void
-  randomizeSlot: (slot: ReferenceSlot, scope: RandomScope, pools: ReferencePools) => void
+  randomizeSlot: (slot: ReferenceSlot, scope: RandomScope, pools: ReferencePools, expectedId?: string | null) => void
   updateApiConfig: (patch: Partial<ApiConfig>) => void
   updateProviderConfig: (provider: ImageProviderId, patch: Partial<ProviderEndpointConfig>) => void
   updateGptParams: (patch: Partial<GptParams>) => void
@@ -540,8 +540,12 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     toast.success(safeMode ? '已随机抽取一套角色配方（安全模式）' : '已随机抽取一套角色配方')
   }
 
-  const randomizeSlot = (slot: ReferenceSlot, scope: RandomScope, pools: ReferencePools) => {
+  const randomizeSlot = (slot: ReferenceSlot, scope: RandomScope, pools: ReferencePools, expectedId?: string | null) => {
     const current = randomContext.current
+    if (expectedId !== undefined && (current.recipe[slot]?.id ?? null) !== expectedId) {
+      toast.info('参考已更改，本次换样已取消')
+      return
+    }
     const next = randomSlot(current.recipe, slot, scope, {
       ...pools,
       costumes: (pools.costumes || []).filter((item) => !current.safeMode || !isNsfwCostume(item)),

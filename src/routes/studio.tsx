@@ -339,12 +339,13 @@ function StudioPage() {
   }
 
   const handleRandomSlot = async (slot: ReferenceSlot) => {
+    const expectedId = recipe[slot]?.id ?? null
     setRandomizingSlot(slot)
     try {
       const pools = slot === 'portrait' ? { portraits: await qc.ensureQueryData(portraitsQuery) }
         : slot === 'costume' ? { costumes: await qc.ensureQueryData(costumesQuery) }
         : { poses: (await qc.ensureQueryData(posesQuery)).items }
-      randomizeSlot(slot, randomScopes[slot], pools)
+      randomizeSlot(slot, randomScopes[slot], pools, expectedId)
     } catch {
       toast.error('素材库加载失败，请稍后重试')
     } finally {
@@ -526,7 +527,7 @@ function StudioPage() {
                       </div>
                       <span className="truncate text-xs">+ 选人像</span>
                     </Link>
-                    <Button type="button" variant="ghost" size="sm" aria-label="上传人像参考图" aria-describedby={showReferenceErrors && missingReferences.includes('人像') ? 'reference-errors' : undefined} aria-busy={uploadingSlot === 'portrait'} disabled={uploadingSlot !== null} className="h-12 shrink-0 border-l px-2 text-xs" onClick={() => { uploadSlotRef.current = 'portrait'; slotInputRef.current?.click() }}>
+                    <Button type="button" variant="ghost" size="sm" aria-label="上传人像参考图" aria-describedby={showReferenceErrors && missingReferences.includes('人像') ? 'reference-errors' : undefined} aria-busy={uploadingSlot === 'portrait'} disabled={uploadingSlot !== null || randomizingSlot !== null} className="h-12 shrink-0 border-l px-2 text-xs" onClick={() => { uploadSlotRef.current = 'portrait'; slotInputRef.current?.click() }}>
                       {uploadingSlot === 'portrait' ? <LoaderCircleIcon className="size-3.5 animate-spin motion-reduce:animate-none" /> : <ImagePlusIcon className="size-3.5" />}
                       {uploadingSlot === 'portrait' ? '处理中' : '上传'}
                     </Button>
@@ -577,7 +578,7 @@ function StudioPage() {
                       </div>
                       <span className="truncate text-xs">+ 选服装</span>
                     </Link>
-                    <Button type="button" variant="ghost" size="sm" aria-label="上传服装参考图" aria-describedby={showReferenceErrors && missingReferences.includes('服装') ? 'reference-errors' : undefined} aria-busy={uploadingSlot === 'costume'} disabled={uploadingSlot !== null} className="h-12 shrink-0 border-l px-2 text-xs" onClick={() => { uploadSlotRef.current = 'costume'; slotInputRef.current?.click() }}>
+                    <Button type="button" variant="ghost" size="sm" aria-label="上传服装参考图" aria-describedby={showReferenceErrors && missingReferences.includes('服装') ? 'reference-errors' : undefined} aria-busy={uploadingSlot === 'costume'} disabled={uploadingSlot !== null || randomizingSlot !== null} className="h-12 shrink-0 border-l px-2 text-xs" onClick={() => { uploadSlotRef.current = 'costume'; slotInputRef.current?.click() }}>
                       {uploadingSlot === 'costume' ? <LoaderCircleIcon className="size-3.5 animate-spin motion-reduce:animate-none" /> : <ImagePlusIcon className="size-3.5" />}
                       {uploadingSlot === 'costume' ? '处理中' : '上传'}
                     </Button>
@@ -667,7 +668,7 @@ function StudioPage() {
                       </div>
                       <span className="truncate text-xs">+ 选姿势</span>
                     </Link>
-                    <Button type="button" variant="ghost" size="sm" aria-label="上传姿势参考图" aria-describedby={showReferenceErrors && missingReferences.includes('姿势') ? 'reference-errors' : undefined} aria-busy={uploadingSlot === 'pose'} disabled={uploadingSlot !== null} className="h-12 shrink-0 border-l px-2 text-xs" onClick={() => { uploadSlotRef.current = 'pose'; slotInputRef.current?.click() }}>
+                    <Button type="button" variant="ghost" size="sm" aria-label="上传姿势参考图" aria-describedby={showReferenceErrors && missingReferences.includes('姿势') ? 'reference-errors' : undefined} aria-busy={uploadingSlot === 'pose'} disabled={uploadingSlot !== null || randomizingSlot !== null} className="h-12 shrink-0 border-l px-2 text-xs" onClick={() => { uploadSlotRef.current = 'pose'; slotInputRef.current?.click() }}>
                       {uploadingSlot === 'pose' ? <LoaderCircleIcon className="size-3.5 animate-spin motion-reduce:animate-none" /> : <ImagePlusIcon className="size-3.5" />}
                       {uploadingSlot === 'pose' ? '处理中' : '上传'}
                     </Button>
