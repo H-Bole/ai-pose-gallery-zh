@@ -1462,7 +1462,7 @@ function StudioPage() {
                     {generationProgress && (
                       <div className="w-56 max-w-full space-y-1.5 pt-1">
                         <div className="text-xs text-foreground/80">{generationProgress.message}</div>
-                        {generationProgress.connection && <p className="text-xs text-muted-foreground">连接：{{connecting: '连接中', connected: '实时连接正常', reconnecting: '重连中，HTTP 查询保底', degraded: '进度降级，使用 HTTP 查询'}[generationProgress.connection]}</p>}
+                        {generationProgress.connection && <p className="text-xs text-muted-foreground">连接：{{connecting: 'WebSocket 连接中', connected: 'WebSocket 已连接', reconnecting: 'WebSocket 重连中，HTTP 保底跟踪', degraded: 'WebSocket 暂不可用，HTTP 保底跟踪'}[generationProgress.connection]}</p>}
                         {generationProgress.percent !== undefined && <p className="text-xs text-muted-foreground">当前节点内采样进度，非整个工作流完成度</p>}
                         {generationProgress.percent !== undefined && (
                           <div className="h-1.5 overflow-hidden rounded-full bg-muted">
