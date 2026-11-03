@@ -27,6 +27,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { referenceImageUrl } from '@/lib/recipeImages'
+import { COSTUME_SOURCES, SHISEI_SOURCE_URLS, costumeSourceId, selectCostumeView } from '@/lib/costumeSources'
 import { CHARADB_NOTICE_URL } from '@/lib/charadb'
 import { useStudio } from '@/store/studioStore'
 
@@ -39,8 +40,10 @@ export const Route = createFileRoute('/costumes')({
 
 function CostumesPage() {
   const { data: costumes } = useSuspenseQuery(costumesQuery)
-  const { recipe, toggleCostume, safeMode, requestUnlockNsfw, isFavorite } = useStudio()
+  const { recipe, toggleCostume, safeMode, requestUnlockNsfw, isFavorite, favoriteView } = useStudio()
 
+  const [source, setSource] = useState('all')
+  const [view, setView] = useState({ itemId: '', id: 'front' })
   const [category, setCategory] = useState('')
   const [kind, setKind] = useState('全部')
   const [tag, setTag] = useState('all')
@@ -52,10 +55,10 @@ function CostumesPage() {
   const activeCategory = safeMode && category && isNsfwCostumeCategory(category) ? '' : category
 
   const baseCostumes = useMemo(
-    () => costumes.filter((x) => (kind === '全部' || (x.一级分类 || '现实') === kind) && (!safeMode || !isNsfwCostume(x))),
-    [costumes, safeMode, kind]
+    () => costumes.filter((x) => (source === 'all' || costumeSourceId(x) === source) && (kind === '全部' || (x.一级分类 || '现实') === kind) && (!safeMode || !isNsfwCostume(x))),
+    [costumes, safeMode, kind, source]
   )
-  const hiddenNsfwCount = costumes.filter((x) => (kind === '全部' || (x.一级分类 || '现实') === kind) && isNsfwCostume(x)).length
+  const hiddenNsfwCount = costumes.filter((x) => (source === 'all' || costumeSourceId(x) === source) && (kind === '全部' || (x.一级分类 || '现实') === kind) && isNsfwCostume(x)).length
   const activeTag = tag === 'all' || baseCostumes.some((x) => (!activeCategory || x.分类 === activeCategory) && x.标签.includes(tag)) ? tag : 'all'
 
   const categories = useMemo(
@@ -77,10 +80,11 @@ function CostumesPage() {
       if (activeTag !== 'all' && !(item.标签 || []).includes(activeTag)) return false
       if (q && !item.检索.toLowerCase().includes(q)) return false
       return true
-    })
-  }, [baseCostumes, activeCategory, activeTag, q, onlyFavorites, isFavorite])
+    }).map((item) => onlyFavorites ? selectCostumeView(item, favoriteView('costume', item)) : item)
+  }, [baseCostumes, activeCategory, activeTag, q, onlyFavorites, isFavorite, favoriteView])
 
-  const currentItem = viewerIndex !== null ? filtered[viewerIndex] : null
+  const viewedItem = viewerIndex !== null ? filtered[viewerIndex] : null
+  const currentItem = viewedItem ? selectCostumeView(viewedItem, view.itemId === viewedItem.id ? view.id : favoriteView('costume', viewedItem) || 'front') : null
 
   useEffect(() => {
     if (viewerIndex === null || !filtered.length) return
@@ -107,13 +111,15 @@ function CostumesPage() {
             }}>{value}</Button>
           ))}
         </div>
-        {kind !== '现实' && (
-          <p className="text-xs text-muted-foreground">
-            二次元服装来源：<a className="underline hover:text-foreground" href="https://charadb-2fi.pages.dev/" target="_blank" rel="noopener noreferrer">たき AI · CharaDB</a>（<a className="underline hover:text-foreground" href={CHARADB_NOTICE_URL} target="_blank" rel="noopener noreferrer">使用说明</a>）
-          </p>
-        )}
+        <Select value={source} onValueChange={(value) => { setSource(value); setCategory(''); setTag('all'); setShown(60); setViewerIndex(null) }}>
+          <SelectTrigger aria-label="服装来源" className="w-56"><SelectValue placeholder="全部来源" /></SelectTrigger>
+          <SelectContent><SelectItem value="all">全部来源</SelectItem>{COSTUME_SOURCES.map((entry) => <SelectItem key={entry.id} value={entry.id}>{entry.label}</SelectItem>)}</SelectContent>
+        </Select>
       </div>
 
+      <div className="space-y-1 text-xs text-muted-foreground">
+        {COSTUME_SOURCES.filter((entry) => (source === 'all' || source === entry.id) && (kind === '全部' || (['gia-anime', 'charadb'].includes(entry.id) ? '二次元' : '现实') === kind)).map((entry) => <p key={entry.id}><a href={entry.url} target="_blank" rel="noopener noreferrer" className="underline">{entry.label}</a>：{entry.notice}</p>)}
+      </div>
       {/* 分类筛选药丸 */}
       <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:pb-0">
         <button
@@ -215,6 +221,7 @@ function CostumesPage() {
             setOnlyFavorites(false)
             setQuery('')
             setKind('全部')
+            setSource('all')
             setShown(60)
           }}
         >
@@ -228,7 +235,7 @@ function CostumesPage() {
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {filtered.slice(0, shown).map((item, idx) => {
-            const picked = recipe.costume?.id === item.id
+            const picked = recipe.costume?.id === item.id && (!item.views || (recipe.costume.selectedView || 'front') === (item.selectedView || 'front'))
             return (
               <div
                 key={item.id}
@@ -270,6 +277,7 @@ function CostumesPage() {
                   <div>
                     <div className="line-clamp-2 text-sm leading-snug font-semibold">{item.服装名称}</div>
                     <div className="mt-1 text-xs text-muted-foreground">{item.来源 || 'ギア · 现实服装'}</div>
+                    {onlyFavorites && item.views && item.views.length > 1 && <div className="mt-1 text-xs text-muted-foreground">收藏视角：{item.views.find((entry) => entry.id === item.selectedView)?.label}</div>}
                     <div className="mt-1.5 flex flex-wrap gap-1">
                       {(item.标签 || []).slice(0, 5).map((t) => (
                         <span key={t} className="rounded bg-background px-1.5 py-0.5 text-xs text-muted-foreground">
@@ -295,10 +303,10 @@ function CostumesPage() {
       )}
 
       {/* 服装详情弹窗 */}
-      <Dialog open={viewerIndex !== null} onOpenChange={(o) => !o && setViewerIndex(null)}>
+      <Dialog open={viewerIndex !== null} onOpenChange={(o) => { if (!o) { setViewerIndex(null); setView({ itemId: '', id: 'front' }) } }}>
         <DialogContent className="max-h-[90dvh] w-[95vw] max-w-4xl overflow-y-auto p-0 sm:max-w-4xl">
           {currentItem && viewerIndex !== null && (() => {
-            const picked = recipe.costume?.id === currentItem.id
+            const picked = recipe.costume?.id === currentItem.id && (recipe.costume.selectedView || 'front') === (currentItem.selectedView || 'front')
             return (
               <div className="grid md:grid-cols-[1fr_320px]">
                 <div className="relative flex max-h-[78dvh] min-h-[min(380px,65dvh)] items-center justify-center bg-muted/60 p-4">
@@ -330,9 +338,18 @@ function CostumesPage() {
                       </div>
                       <DialogTitle className="mt-2 text-lg leading-snug font-semibold">{currentItem.服装名称}</DialogTitle>
                       <p className="text-xs text-muted-foreground">来源：{currentItem.来源 || 'ギア（@giaaibusi）'}</p>
+                      {currentItem.source === 'shisei' && <div className="space-y-2 text-xs text-muted-foreground">
+                        <p>Shisei / wquguru · CC0 · AI 生成服装参考，并非专业复原。</p>
+                        <div className="flex flex-wrap gap-x-3 gap-y-2" aria-label="Shisei 来源与许可">
+                          <a className="underline" href={SHISEI_SOURCE_URLS.repository} target="_blank" rel="noopener noreferrer">原仓库</a>
+                          <a className="underline" href={SHISEI_SOURCE_URLS.catalog} target="_blank" rel="noopener noreferrer">条目目录（{currentItem.id.replace('shisei-', '')}，固定版本）</a>
+                          <a className="underline" href={SHISEI_SOURCE_URLS.license} target="_blank" rel="noopener noreferrer">图片许可证（CC0）</a>
+                        </div>
+                      </div>}
                       {currentItem.source === 'charadb' && <a className="text-xs underline" href={CHARADB_NOTICE_URL} target="_blank" rel="noopener noreferrer">图片仅作参考，禁止真人、未成年人及再分发；查看原作者条件</a>}
                     </DialogHeader>
 
+                    {currentItem.views && <div className="flex flex-wrap gap-2" aria-label="服装视角">{currentItem.views.map((entry) => <Button key={entry.id} variant={currentItem.selectedView === entry.id ? 'default' : 'outline'} aria-pressed={currentItem.selectedView === entry.id} onClick={() => setView({ itemId: currentItem.id, id: entry.id })}>{entry.label}</Button>)}</div>}
                     <div>
                       <div className="mb-1.5 text-xs font-medium text-muted-foreground">中文单品与色彩标签</div>
                       <div className="flex flex-wrap gap-1.5">
@@ -373,15 +390,15 @@ function CostumesPage() {
                     </Button>
                     <div className="grid grid-cols-2 gap-2">
                       <Button variant="outline" size="sm" asChild>
-                        <a href={referenceImageUrl(currentItem.原图)} download={currentItem.source === 'charadb' ? undefined : `${currentItem.id}.webp`} target={currentItem.source === 'charadb' ? '_blank' : undefined} rel="noopener noreferrer">
+                        <a href={referenceImageUrl(currentItem.原图)} download={['charadb', 'gia-anime'].includes(currentItem.source || '') ? undefined : `${currentItem.id}.webp`} target={['charadb', 'gia-anime'].includes(currentItem.source || '') ? '_blank' : undefined} rel="noopener noreferrer">
                           <DownloadIcon className="size-3.5" />
-                          {currentItem.source === 'charadb' ? '前往来源原图' : '下载高清原图'}
+                          {['charadb', 'gia-anime'].includes(currentItem.source || '') ? '前往来源原图' : '下载高清原图'}
                         </a>
                       </Button>
                       <Button variant="outline" size="sm" asChild>
-                        <a href={currentItem.来源地址 || referenceImageUrl(currentItem.原图)} target="_blank" rel="noopener noreferrer">
+                        <a href={currentItem.source === 'shisei' ? referenceImageUrl(currentItem.原图) : currentItem.来源地址 || referenceImageUrl(currentItem.原图)} target="_blank" rel="noopener noreferrer">
                           <ExternalLinkIcon className="size-3.5" />
-                          {currentItem.source === 'charadb' ? '原作者站点' : '新窗口原图'}
+                          {['charadb', 'gia-anime'].includes(currentItem.source || '') ? '原作者站点' : '新窗口原图'}
                         </a>
                       </Button>
                     </div>

@@ -50,7 +50,7 @@ function DashboardPage() {
           title="总参考图"
           value={totalImages.toLocaleString('zh-CN')}
           icon={<LayersIcon />}
-          desc="11,568 本地高清图"
+          desc="图库条目 · 多视角不重复计数"
         />
         <StatCard
           title="动作姿势 (Pose)"
@@ -62,7 +62,7 @@ function DashboardPage() {
           title="服装穿搭 (Costume)"
           value={`${costumes.length.toLocaleString('zh-CN')} 套`}
           icon={<ShirtIcon />}
-          desc="现实 1,407 · 二次元 440"
+          desc={`现实 ${costumes.filter((item) => (item.一级分类 || '现实') === '现实').length.toLocaleString('zh-CN')} · 二次元 ${costumes.filter((item) => item.一级分类 === '二次元').length.toLocaleString('zh-CN')}`}
         />
         <StatCard
           title="人像颜值 (Portrait)"
@@ -201,7 +201,7 @@ function DashboardPage() {
         >
           ギア (@giaaibusi)
         </a>{' '}
-        公开分享。新增二次元服装来自 たき AI · CharaDB，仅收录元数据，图片从来源站点读取，各素材适用各自条件。默认已开启「安全模式 (SFW)」隐藏 18+ 敏感分类，未满 18 周岁请勿关闭。本工具与素材
+        公开分享。二次元服装来自ギア动漫库与 たき AI · CharaDB，仅收录元数据并按需读取原站图片；中国历代服装来自 Shisei，按发布者 CC0 声明使用。各素材适用各自条件。默认已开启「安全模式 (SFW)」隐藏 18+ 敏感分类，未满 18 周岁请勿关闭。本工具与素材
         <strong className="text-foreground">仅供个人学习与合法艺术创作使用，严禁用于任何违法违规或侵害他人肖像权用途</strong>。{' '}
         <Link to="/guide" className="font-medium text-primary underline">
           查看完整免责声明 →

@@ -62,6 +62,7 @@ import {
 import { poseImagePath, poseThumbPath, referenceImageUrl, uploadedReferences } from '@/lib/recipeImages'
 import { useStudio } from '@/store/studioStore'
 import type { RandomScope, ReferenceSlot } from '@/lib/randomRecipe'
+import { selectCostumeView } from '@/lib/costumeSources'
 import type {
   ComfyUiParams,
   DoubaoParams,
@@ -357,6 +358,10 @@ function StudioPage() {
   }
 
   const randomControls = (slot: ReferenceSlot, label: string) => <div className="flex basis-full flex-wrap items-center gap-2 border-t pt-2">
+    {slot === 'costume' && recipe.costume?.views && <Select value={recipe.costume.selectedView || 'front'} onValueChange={(value) => { if (recipe.costume) setCostume(selectCostumeView(recipe.costume, value)) }}>
+      <SelectTrigger aria-label="已选服装视角" className="min-h-11 w-24"><SelectValue /></SelectTrigger>
+      <SelectContent>{recipe.costume.views.map((view) => <SelectItem key={view.id} value={view.id}>{view.label}</SelectItem>)}</SelectContent>
+    </Select>}
     <Select value={randomScopes[slot]} onValueChange={(value) => setRandomScopes((current) => ({ ...current, [slot]: value as RandomScope }))}>
       <SelectTrigger aria-label={`${label}换样范围`} className="min-h-11 w-24"><SelectValue /></SelectTrigger>
       <SelectContent><SelectItem value="similar">同类</SelectItem><SelectItem value="all">全部</SelectItem></SelectContent>

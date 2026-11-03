@@ -16,7 +16,7 @@ function GuidePage() {
       <Section title="版本与开源归属" className="@lg/section:grid-cols-1">
         <div className="space-y-2.5 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
           <p>
-            本个人版由 H-Bole 基于 Anhao 中文版二次开发。原有图库素材作者为ギア（@giaaibusi），新增二次元服装作者为たき AI（@taki_auto），素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
+            本个人版由 H-Bole 基于 Anhao 中文版二次开发。原有图库素材作者为ギア（@giaaibusi），CharaDB 作者为たき AI（@taki_auto），中国历代服装来自 Shisei／wquguru，素材许可遵循下方版权说明，应用代码遵循 MIT 许可。
           </p>
           <p className="flex flex-wrap gap-x-4 gap-y-2">
             <a className="underline" href="https://github.com/H-Bole/ai-pose-gallery-zh">个人版源码</a>
@@ -38,9 +38,9 @@ function GuidePage() {
 
         <div className="rounded-2xl bg-background p-4">
           <Badge>2. 服装</Badge>
-          <h3 className="mt-2 text-lg font-semibold">服装穿搭库 (1,847)</h3>
+          <h3 className="mt-2 text-lg font-semibold">服装穿搭库 (3,224)</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            按全部 / 现实 / 二次元及分类、标签挑选；现实服装 1,407 套，CharaDB 二次元服装 440 套。二次元图片需联网并遵守独立来源条件。
+            按现实／二次元、来源、分类和标签挑选；原有写实服装1,407套、CharaDB二次元440套、新增动漫表现1,320条及中国历代57套。中国服装可切换有效视角，同一套不重复计数；二次元图片按需联网读取，各来源条件独立。
           </p>
         </div>
 
@@ -50,6 +50,14 @@ function GuidePage() {
           <p className="mt-1 text-sm text-muted-foreground">
             挑选 5 视角 3D 素体白模或深度图（Depth），结合云端 API 或本地 ComfyUI 一键生成角色立绘。
           </p>
+        </div>
+      </Section>
+
+      <Section title="换样与参考对比" className="@lg/section:grid-cols-1">
+        <div className="space-y-2 rounded-2xl bg-background p-4 text-sm leading-relaxed text-muted-foreground">
+          <p>每槽“换一个”只替换该槽；默认同类，可选全部。其他素材、参数和手动提示词保留，不会自动生成。无候选时会提示，上传素材不参与随机抽取。</p>
+          <p>生成结果、历史与作品的“对比参考”使用当次提交快照，支持并排、滑杆、共同缩放与移动。旧记录无快照时会说明；后来修改搭配不会改变已提交的参考。</p>
+          <p>中国历代服装在详情与已选槽切换有效视角，收藏、配方和生成参考均保留该视角。</p>
         </div>
       </Section>
 
@@ -92,7 +100,12 @@ function GuidePage() {
             440 套二次元服装源自 <a className="underline hover:text-foreground" href="https://charadb-2fi.pages.dev/" target="_blank" rel="noopener noreferrer">たき AI · CharaDB</a>（标签与名称遵循 CC0，图片从原站在线加载，仅供学习与生图参考，禁止用于真人/未成年人或将原图二次分发，详见 <a className="underline hover:text-foreground" href="https://github.com/taki-ttt/charadb/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">原作者说明</a>）。
           </p>
           <p>
-            <strong className="text-foreground">• 使用与分发限制：</strong>
+            <strong className="text-foreground">• 新增动漫表现与中国服装：</strong>
+            1,320条动漫表现来自 <a className="underline" href="https://ai-costume-anime-gallery.pages.dev/" target="_blank" rel="noopener noreferrer">ギア动漫服装站</a>，是同款穿搭的动漫表现，图片按需联网读取，不镜像、不套用代码许可。
+            中国历代57套、227视角来自 <a className="underline" href="https://github.com/wquguru/shisei" target="_blank" rel="noopener noreferrer">Shisei · wquguru</a>，按发布者 <a className="underline" href="https://github.com/wquguru/shisei/blob/8f61ceab10e45f8d3afd254900903733a0ba76ee/LICENSE-images" target="_blank" rel="noopener noreferrer">CC0 1.0</a> 声明使用；属于AI生成服装参考，不代表专业历史形制考据。
+          </p>
+          <p>
+            <strong className="text-foreground">• 原有素材使用与分发限制：</strong>
             人像库遵循 <strong className="text-emerald-600 dark:text-emerald-400">CC0 1.0 协议</strong>；原有姿势库与现实服装库免费供个人学习与 AI 生图参考使用，
             <strong className="text-foreground">严禁将本图库原始图片打包转售或用于付费分发</strong>。
           </p>
