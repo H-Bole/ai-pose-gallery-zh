@@ -14,7 +14,7 @@ import {
   RotateCcwIcon,
   SearchIcon,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { costumesQuery, isNsfwCostume, isNsfwCostumeCategory } from '@/api/gallery'
 import { EmptyState } from '@/components/common/EmptyState'
@@ -30,6 +30,7 @@ import { referenceImageUrl } from '@/lib/recipeImages'
 import { COSTUME_SOURCES, SHISEI_SOURCE_URLS, costumeSourceId, selectCostumeView } from '@/lib/costumeSources'
 import { CHARADB_NOTICE_URL } from '@/lib/charadb'
 import { useStudio } from '@/store/studioStore'
+import type { CostumeItem } from '@/types/gallery'
 
 export const Route = createFileRoute('/costumes')({
   staticData: { title: '服装穿搭库' },
@@ -37,6 +38,24 @@ export const Route = createFileRoute('/costumes')({
   pendingComponent: () => <Skeleton className="h-[540px] rounded-[22px]" />,
   component: CostumesPage,
 })
+
+function CostumeThumbnail({ item, onOpen }: { item: CostumeItem; onOpen: () => void }) {
+  const [failed, setFailed] = useState(false)
+  const openButton = useRef<HTMLButtonElement>(null)
+  return <div className="relative aspect-2/3 w-full shrink-0 overflow-hidden rounded-2xl bg-background">
+    <button ref={openButton} type="button" aria-label={`查看 ${item.id} 大图`} onClick={onOpen} className="relative block h-full w-full cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+      {!failed && <img src={referenceImageUrl(item.缩略图)} alt={item.服装名称} loading="lazy" onError={() => setFailed(true)} className="h-full w-full object-contain transition duration-300 group-hover:scale-105" />}
+      <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
+        <span className="rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-xs font-bold text-white">{item.id}</span>
+        <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-xs font-semibold text-zinc-900">{item.分类}</span>
+      </span>
+    </button>
+    {failed && <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/90 p-2 text-center">
+      <p role="status" className="text-xs text-muted-foreground">图片加载失败</p>
+      <Button type="button" variant="outline" className="pointer-events-auto min-h-11" aria-label={`重新加载 ${item.id} 缩略图`} onClick={() => { setFailed(false); openButton.current?.focus() }}>重新加载</Button>
+    </div>}
+  </div>
+}
 
 function CostumesPage() {
   const { data: costumes } = useSuspenseQuery(costumesQuery)
@@ -243,27 +262,7 @@ function CostumesPage() {
                 className="gallery-card group flex flex-col overflow-hidden rounded-[20px] bg-muted p-2 transition hover:shadow-md"
               >
                 <TiltSurface className="gallery-image-tilt shrink-0 rounded-2xl">
-                  <button
-                    type="button"
-                    aria-label={`查看 ${item.id} 大图`}
-                    onClick={() => setViewerIndex(idx)}
-                    className="relative block w-full shrink-0 aspect-2/3 cursor-zoom-in overflow-hidden rounded-2xl bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                  >
-                    <img
-                      src={referenceImageUrl(item.缩略图)}
-                      alt={item.服装名称}
-                      loading="lazy"
-                      className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
-                    />
-                    <span className="absolute inset-x-2 top-2 flex items-center justify-between gap-1">
-                      <span className="rounded-md bg-black/70 px-1.5 py-0.5 font-mono text-xs font-bold text-white">
-                        {item.id}
-                      </span>
-                      <span className="rounded-md bg-white/90 px-1.5 py-0.5 text-xs font-semibold text-zinc-900">
-                        {item.分类}
-                      </span>
-                    </span>
-                  </button>
+                  <CostumeThumbnail key={item.缩略图} item={item} onOpen={() => setViewerIndex(idx)} />
                 </TiltSurface>
                 <div className="mt-2 flex min-h-11 items-center gap-2">
                   <FavoriteButton category="costume" item={item} compact />
